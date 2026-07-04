@@ -17,6 +17,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
+        /* =====================================================================
+           DESIGN TOKENS & BASE STYLES
+           ===================================================================== */
         :root {
             --ink: #1c1917;
             --paper: #faf6f0;
@@ -61,7 +64,9 @@
         .ledger-num { font-variant-numeric: tabular-nums; }
         h1, h2, .display-font { font-family: 'Fraunces', Georgia, serif; }
 
-        /* ============ LOGIN ============ */
+        /* =====================================================================
+           LOGIN SCREEN
+           ===================================================================== */
         #loginScreen {
             max-width: 380px; margin: 12vh auto; background: var(--paper-raised); padding: 38px 28px;
             border-radius: 20px; box-shadow: var(--shadow-lg); text-align: center;
@@ -90,7 +95,9 @@
 
         #mainDashboard, #donatePage { display: none; max-width: 640px; margin: 0 auto; }
 
-        /* ============ HEADER ============ */
+        /* =====================================================================
+           HEADER & NAVIGATION
+           ===================================================================== */
         .top-card {
             background-color: var(--paper-raised); padding: 28px 20px; border-radius: var(--radius);
             box-shadow: var(--shadow); text-align: center; margin-bottom: 16px; border: 1px solid var(--rule);
@@ -122,8 +129,10 @@
         .checkbox-group label { cursor: pointer; display: flex; align-items: center; gap: 6px; font-weight: 500; }
         .checkbox-group input { cursor: pointer; width: 16px; height: 16px; accent-color: var(--saffron); }
 
-        /* ============ SUMMARY ============ */
-        .summary-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+        /* =====================================================================
+           DASHBOARD STATS & FINANCIAL CARDS
+           ===================================================================== */
+        .summary-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px; }
         .financial-card {
             background-color: var(--paper-raised); padding: 16px 8px; border-radius: var(--radius);
             box-shadow: var(--shadow); text-align: center; border: 1px solid var(--rule);
@@ -138,7 +147,20 @@
         .value-expenses { color: var(--terracotta); }
         .value-balance { color: var(--gold); }
 
-        /* ============ MONTH FILTER ============ */
+        /* Enhanced Stats Row */
+        .mini-stats-row {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 16px;
+        }
+        .mini-stat-card {
+            background-color: var(--paper-raised); padding: 12px 8px; border-radius: 10px;
+            text-align: center; border: 1px solid var(--rule); box-shadow: var(--shadow);
+        }
+        .mini-stat-label { font-size: 10px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; margin-bottom: 4px;}
+        .mini-stat-value { font-size: 14px; font-weight: 700; color: var(--ink); }
+
+        /* =====================================================================
+           FILTER BAR & FORMS
+           ===================================================================== */
         .filter-bar {
             background-color: var(--paper-raised); padding: 14px 16px; border-radius: var(--radius);
             box-shadow: var(--shadow); margin-bottom: 16px; border: 1px solid var(--rule);
@@ -151,7 +173,6 @@
         }
         .filter-clear { font-size: 12px; color: var(--saffron); text-decoration: underline; cursor: pointer; background: none; border: none; padding: 4px; }
 
-        /* ============ FORM CARDS ============ */
         .form-card { background-color: var(--paper-raised); padding: 20px 18px; border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 16px; border: 1px solid var(--rule); }
         .section-title { font-size: 17px; font-weight: 600; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 2px solid var(--rule); display: flex; justify-content: space-between; align-items: center; font-family: 'Fraunces', serif;}
         .section-title .count-pill { font-size: 11px; font-weight: 600; background: var(--paper); color: var(--text-muted); padding: 3px 9px; border-radius: 99px; font-family: 'Inter', sans-serif; }
@@ -180,12 +201,13 @@
         .field-hint { color: var(--text-muted); font-size: 12px; margin-top: 6px; }
         .hidden { display: none !important; }
 
-        /* ============ SEARCH ============ */
+        /* =====================================================================
+           SEARCH & LISTS
+           ===================================================================== */
         .search-row { position: relative; margin-bottom: 12px; }
         .search-row input { padding-left: 36px; }
         .search-row i { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 13px; }
 
-        /* ============ LISTS ============ */
         ul { list-style: none; margin-top: 4px; max-height: 320px; overflow-y: auto; }
         li {
             display: flex; justify-content: space-between; align-items: center; padding: 12px 4px;
@@ -203,24 +225,25 @@
             transition: background 0.15s; flex-shrink: 0;
         }
         .icon-btn:hover { background: var(--rule); }
+        .icon-btn.primary:hover { background: var(--saffron-dim); color: var(--saffron); }
         .icon-btn.danger:hover { background: var(--terracotta-dim); color: var(--terracotta); }
         .icon-btn.success:hover { background: var(--sage-dim); color: var(--sage); }
         .icon-btn.gold:hover { background: var(--gold-dim); color: var(--gold); }
         .empty-row { text-align: center; color: var(--text-muted); font-size: 13.5px; padding: 24px 10px; }
 
-        /* ============ HISTORY ============ */
         .history-card { background-color: var(--paper-raised); border-style: dashed; }
         .clear-history-btn { background: var(--paper); color: var(--text-muted); border: 1px solid var(--rule); padding: 6px 12px; border-radius: 8px; font-size: 12px; cursor: pointer; font-family: 'Inter', sans-serif; font-weight: 600;}
         #historyList li { opacity: 0.75; }
 
-        /* ============ TOP CONTRIBUTORS ============ */
+        /* =====================================================================
+           TOP CONTRIBUTORS & QR CARD
+           ===================================================================== */
         .leaderboard-item { display: flex; align-items: center; justify-content: space-between; padding: 9px 4px; border-bottom: 1px solid var(--rule); }
         .leaderboard-item:last-child { border-bottom: none; }
         .lb-rank { font-family: 'Fraunces', serif; font-weight: 600; color: var(--gold); width: 22px; }
         .lb-name { flex: 1; font-weight: 500; font-size: 14px; padding-left: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .lb-amount { font-weight: 700; color: var(--sage); font-size: 14px; }
 
-        /* ============ DONATION / QR CARD ============ */
         .donate-card-inner { text-align: center; }
         .qr-frame {
             width: 100%; max-width: 260px; aspect-ratio: 1/1; margin: 0 auto 14px; border-radius: 16px;
@@ -248,7 +271,9 @@
         }
         .pending-item { border-left: 3px solid var(--gold); padding-left: 10px !important; }
 
-        /* ============ PUBLIC DONATE PAGE ============ */
+        /* =====================================================================
+           PUBLIC DONATE PAGE & UTILS
+           ===================================================================== */
         .donate-hero { text-align: center; padding: 30px 20px 24px; }
         .donate-hero .logo-img { margin-bottom: 14px; }
         .donate-hero h1 { font-size: 25px; margin-bottom: 6px; }
@@ -259,7 +284,6 @@
         .success-panel h3 { font-size: 19px; margin-bottom: 8px; }
         .success-panel p { color: var(--text-muted); font-size: 14px; }
 
-        /* ============ TOAST ============ */
         #toast {
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(20px);
             background: var(--ink); color: var(--paper); padding: 12px 20px; border-radius: 10px;
@@ -274,9 +298,9 @@
 
         #pdfContent { display: none; }
 
-        /* =========================================================
-           CHANDA PAUTI RECEIPT TEMPLATE (Overlaid on Image)
-           ========================================================= */
+        /* =====================================================================
+           CHANDA PAUTI RECEIPT TEMPLATE (Overlaid on Image - DO NOT EDIT)
+           ===================================================================== */
         #receipt-template {
             position: absolute; left: -9999px; top: 0;
             width: 794px; height: 1123px; /* Standard Print Portrait */
@@ -294,10 +318,11 @@
         #r_words     { top: 727px; left: 250px; width: 450px; white-space: normal; line-height: 1.8; font-size: 20px; }
         #r_txndetails { top: 1000px; left: 100px; font-size: 16px; color: #555; font-weight: normal; }
 
-        @media (max-width: 380px) {
+        @media (max-width: 420px) {
             body { padding: 10px; }
             .summary-row { grid-template-columns: 1fr 1fr; }
             .financial-card.balance { grid-column: span 2; }
+            .mini-stats-row { grid-template-columns: 1fr 1fr; }
             .toolbar .btn { flex-basis: 100%; }
         }
     </style>
@@ -403,6 +428,25 @@
         </div>
     </div>
 
+    <div class="mini-stats-row">
+        <div class="mini-stat-card">
+            <div class="mini-stat-label">Today</div>
+            <div class="mini-stat-value ledger-num text-success" id="statToday">₹0</div>
+        </div>
+        <div class="mini-stat-card">
+            <div class="mini-stat-label">This Month</div>
+            <div class="mini-stat-value ledger-num text-success" id="statMonth">₹0</div>
+        </div>
+        <div class="mini-stat-card">
+            <div class="mini-stat-label">Donors</div>
+            <div class="mini-stat-value ledger-num" id="statDonors">0</div>
+        </div>
+        <div class="mini-stat-card">
+            <div class="mini-stat-label">Receipts</div>
+            <div class="mini-stat-value ledger-num" id="statReceipts">0</div>
+        </div>
+    </div>
+
     <div class="filter-bar">
         <label for="monthFilter"><i class="fas fa-calendar-days"></i></label>
         <select id="monthFilter">
@@ -467,7 +511,7 @@
 
         <div class="search-row" style="margin-top:18px;">
             <i class="fas fa-magnifying-glass"></i>
-            <input type="text" id="fundSearch" placeholder="Search Receipt, Name, Mobile…">
+            <input type="text" id="fundSearch" placeholder="Search Name, Mobile, Amount, Receipt…">
         </div>
         <h2 class="section-title text-success" style="border:none; padding-bottom:0; margin-bottom:6px; font-size:14px;">
             <span>Log</span><span class="count-pill" id="fundCount">0</span>
@@ -524,9 +568,27 @@
 </div>
 
 <script type="module">
+    // =====================================================================
+    // 1. FIREBASE INITIALIZATION & IMPORTS
+    // =====================================================================
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
     import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, updateDoc, setDoc, query, orderBy, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
+    const firebaseConfig = {
+        apiKey: "AIzaSyAe1mZbAfdICSTbprjRz1vbbJJwRRtsTvE",
+        authDomain: "gajkarna-f515d.firebaseapp.com",
+        projectId: "gajkarna-f515d",
+        storageBucket: "gajkarna-f515d.firebasestorage.app",
+        messagingSenderId: "147288053718",
+        appId: "1:147288053718:web:2aba3e8d23c75599403677"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // =====================================================================
+    // 2. AUTHENTICATION & SECURITY
+    // =====================================================================
     const SECRET_PIN = "1523";
     const MAX_ATTEMPTS = 5;
     const LOCKOUT_MS = 30000;
@@ -593,20 +655,9 @@
         document.getElementById('pinInput').focus();
     });
 
-    // --- FIREBASE CONFIG ---
-    const firebaseConfig = {
-        apiKey: "AIzaSyAe1mZbAfdICSTbprjRz1vbbJJwRRtsTvE",
-        authDomain: "gajkarna-f515d.firebaseapp.com",
-        projectId: "gajkarna-f515d",
-        storageBucket: "gajkarna-f515d.firebasestorage.app",
-        messagingSenderId: "147288053718",
-        appId: "1:147288053718:web:2aba3e8d23c75599403677"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    // --- DATE HELPERS ---
+    // =====================================================================
+    // 3. GLOBALS & HELPERS
+    // =====================================================================
     const d = new Date();
     const year = d.getFullYear();
     const month = String(d.getMonth() + 1).padStart(2, '0');
@@ -661,7 +712,6 @@
         return div.innerHTML;
     }
 
-    // Number to Words for PDF Receipt
     function numberToWords(num) {
         const a = ['','One ','Two ','Three ','Four ', 'Five ','Six ','Seven ','Eight ','Nine ','Ten ','Eleven ','Twelve ','Thirteen ','Fourteen ','Fifteen ','Sixteen ','Seventeen ','Eighteen ','Nineteen '];
         const b = ['', '', 'Twenty','Thirty','Forty','Fifty', 'Sixty','Seventy','Eighty','Ninety'];
@@ -677,7 +727,7 @@
     }
 
     // =====================================================================
-    // PUBLIC DONATION LINK ROUTING & UPI
+    // 4. PUBLIC DONATION FLOW & UPI INTENT
     // =====================================================================
     function donationLinkUrl() { return `${location.origin}${location.pathname}?donate=1`; }
 
@@ -692,6 +742,7 @@
         history.replaceState(null, '', '?donate=1');
         showDonatePage();
     });
+    
     document.getElementById('backToLoginBtn').addEventListener('click', () => {
         history.replaceState(null, '', location.pathname);
         document.getElementById('donatePage').style.display = 'none';
@@ -706,6 +757,7 @@
         }, () => { });
     }
 
+    // Opens Native UPI App
     window.initiateUPI = () => {
         const amount = document.getElementById('pubAmount').value;
         const errorEl = document.getElementById('pubError');
@@ -721,13 +773,14 @@
         const groupName = "Gajkarna Group";
         const upiUrl = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(groupName)}&am=${amount}&cu=INR`;
         
-        // Open Intent
+        // Open the Intent
         window.location.href = upiUrl;
         
-        // Reveal Txn ID section
+        // Reveal the Transaction ID entry section
         document.getElementById('postPaymentSection').classList.remove('hidden');
     };
 
+    // Submits the pending donation to Firestore
     document.getElementById('pubSubmitBtn').addEventListener('click', async () => {
         const name = document.getElementById('pubName').value.trim();
         const mobile = document.getElementById('pubMobile').value.trim();
@@ -765,7 +818,9 @@
         showDonatePage();
     }
 
-    // --- REALTIME SYNC (admin dashboard) ---
+    // =====================================================================
+    // 5. REALTIME SYNC & DASHBOARD UI UPDATES
+    // =====================================================================
     function startRealtimeSync() {
         const fundsQuery = query(collection(db, "funds"), orderBy("date", "desc"));
         onSnapshot(fundsQuery, (snapshot) => {
@@ -810,21 +865,25 @@
         if (sorted.includes(prevValue)) select.value = prevValue;
     }
 
+    // Event Listeners for search & filters
     document.getElementById('monthFilter').addEventListener('change', (e) => {
         activeMonthFilter = e.target.value;
         document.getElementById('clearFilterBtn').style.display = activeMonthFilter ? 'inline-block' : 'none';
         updateUI();
     });
+    
     document.getElementById('clearFilterBtn').addEventListener('click', () => {
         activeMonthFilter = '';
         document.getElementById('monthFilter').value = '';
         document.getElementById('clearFilterBtn').style.display = 'none';
         updateUI();
     });
+    
     document.getElementById('fundSearch').addEventListener('input', (e) => {
         fundSearchTerm = e.target.value.toLowerCase();
         updateUI();
     });
+    
     document.getElementById('expSearch').addEventListener('input', (e) => {
         expSearchTerm = e.target.value.toLowerCase();
         updateUI();
@@ -836,14 +895,21 @@
         if (card.style.display === 'block') card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     });
 
-    // HTML ROW BUILDERS
+    // =====================================================================
+    // 6. HTML ROW BUILDERS
+    // =====================================================================
     function createActiveRow(item, colName) {
         const color = colName === 'funds' ? 'text-success' : 'text-danger';
         const safeName = escapeHtml(item.name);
         const receiptLbl = item.receiptNo ? `<span style="font-size:11px; color:#ad8327; display:block;">${item.receiptNo}</span>` : '';
+        
         const receiptBtn = colName === 'funds'
             ? `<button class="icon-btn gold" onclick="generateReceiptPDF('${item.id}')" title="Download PDF"><i class="fas fa-file-pdf"></i></button>`
             : '';
+            
+        // Added an EDIT button for full control
+        const editBtn = `<button class="icon-btn primary" onclick="editRecord('${colName}', '${item.id}')" title="Edit"><i class="fas fa-pen"></i></button>`;
+
         return `
             <li>
                 <div class="item-info">
@@ -854,6 +920,7 @@
                 <div class="item-actions">
                     <span class="item-amount ${color} ledger-num">₹${item.amount.toLocaleString('en-IN')}</span>
                     ${receiptBtn}
+                    ${editBtn}
                     <button class="icon-btn danger" onclick="moveToTrash('${colName}', '${item.id}')" title="Move to trash"><i class="fas fa-trash"></i></button>
                 </div>
             </li>`;
@@ -903,31 +970,49 @@
         return true;
     }
 
+    // CORE UI RENDER LOOP
     function updateUI() {
         let totalFund = 0, totalExp = 0, historyCount = 0;
         let visibleFundCount = 0, visibleExpCount = 0;
+        
+        let statTodaySum = 0;
+        let statMonthSum = 0;
+        const uniqueDonors = new Set();
+        let totalReceipts = 0;
 
         const contList = document.getElementById('contributionList');
         const expList = document.getElementById('expenseList');
         const histList = document.getElementById('historyList');
 
         contList.innerHTML = ''; expList.innerHTML = ''; histList.innerHTML = '';
+        
+        const nowStrDate = new Date().toISOString().split('T')[0]; // Current local day YYYY-MM-DD logic
+        const currentMonthKey = monthKey(localToday);
 
         contributions.forEach((item) => {
             if (item.status === 'deleted') {
                 histList.innerHTML += createHistoryRow(item, 'funds');
                 historyCount++; return;
             }
-            if (!matchesFilters(item)) return;
-            totalFund += item.amount;
             
-            // Search by Name, ReceiptNo, Mobile or TxnId
+            // Calculate Global Stats regardless of search filters
+            totalFund += item.amount;
+            if(item.date === localToday) statTodaySum += item.amount;
+            if(monthKey(item.date) === currentMonthKey) statMonthSum += item.amount;
+            if(item.name) uniqueDonors.add(item.name.toLowerCase().trim());
+            if(item.receiptNo) totalReceipts++;
+
+            // Apply Display Filters
+            if (!matchesFilters(item)) return;
+            
+            // Enhanced Search by Name, ReceiptNo, Mobile, TxnId, or AMOUNT
             if (fundSearchTerm) {
                 const term = fundSearchTerm;
                 const match = item.name.toLowerCase().includes(term) || 
                               (item.receiptNo && item.receiptNo.toLowerCase().includes(term)) ||
                               (item.mobile && item.mobile.includes(term)) ||
-                              (item.txnId && item.txnId.toLowerCase().includes(term));
+                              (item.txnId && item.txnId.toLowerCase().includes(term)) ||
+                              (item.amount.toString().includes(term));
                 if(!match) return;
             }
 
@@ -940,9 +1025,11 @@
                 histList.innerHTML += createHistoryRow(item, 'expenses');
                 historyCount++; return;
             }
-            if (!matchesFilters(item)) return;
             totalExp += item.amount;
+            
+            if (!matchesFilters(item)) return;
             if (expSearchTerm && !item.name.toLowerCase().includes(expSearchTerm)) return;
+            
             visibleExpCount++;
             expList.innerHTML += createActiveRow(item, 'expenses');
         });
@@ -951,11 +1038,18 @@
         if (visibleFundCount === 0) contList.innerHTML = `<p class="empty-row">No contributions match.</p>`;
         if (visibleExpCount === 0) expList.innerHTML = `<p class="empty-row">No expenses match.</p>`;
 
+        // Update DOM Main Counters
         document.getElementById('fundCount').textContent = visibleFundCount;
         document.getElementById('expCount').textContent = visibleExpCount;
         document.getElementById('totalCollected').innerText = `₹${totalFund.toLocaleString('en-IN')}`;
         document.getElementById('totalExpenses').innerText = `₹${totalExp.toLocaleString('en-IN')}`;
         document.getElementById('currentBalance').innerText = `₹${(totalFund - totalExp).toLocaleString('en-IN')}`;
+        
+        // Update Enhanced Mini Stats
+        document.getElementById('statToday').innerText = `₹${statTodaySum.toLocaleString('en-IN')}`;
+        document.getElementById('statMonth').innerText = `₹${statMonthSum.toLocaleString('en-IN')}`;
+        document.getElementById('statDonors').innerText = uniqueDonors.size;
+        document.getElementById('statReceipts').innerText = totalReceipts;
 
         updateLeaderboard();
     }
@@ -993,8 +1087,10 @@
     }
 
     // =====================================================================
-    // AUTO RECEIPT GENERATION (Transaction)
+    // 7. ADMIN ACTION LOGIC (Transactions & Approvals)
     // =====================================================================
+    
+    // Auto-generates Receipt Number safely during approval
     window.approvePending = async function(id) {
         const item = pendingDonations.find(p => p.id === id);
         if (!item) return;
@@ -1027,13 +1123,11 @@
 
             showToast(`Approved! Receipt ${newReceiptNo} generated.`);
             
-            // Auto-download PDF
-            const justAdded = query(collection(db, "funds"), orderBy("timestamp", "desc"));
-            onSnapshot(justAdded, (snap) => {
-                if(snap.docs.length > 0 && snap.docs[0].data().receiptNo === newReceiptNo) {
-                    generateReceiptPDF(snap.docs[0].id, newReceiptNo);
-                }
-            }, (err)=>{});
+            // Wait for DB to sync, then generate PDF automatically
+            setTimeout(() => {
+                const addedItem = contributions.find(c => c.receiptNo === newReceiptNo);
+                if(addedItem) generateReceiptPDF(addedItem.id, newReceiptNo, addedItem);
+            }, 2000);
 
         } catch (err) { 
             console.error(err); showToast('Approval failed — check connection'); 
@@ -1048,7 +1142,36 @@
         } catch (err) { showToast('Could not reject item'); }
     }
 
-    // --- GLOBAL TRASH FUNCTIONS ---
+    // EDIT RECORD
+    window.editRecord = async function(colName, id) {
+        const item = colName === 'funds' ? contributions.find(c => c.id === id) : expenses.find(e => e.id === id);
+        if(!item) return;
+        
+        const newName = prompt("Edit Name:", item.name);
+        if (newName === null) return; 
+        
+        const newAmountStr = prompt("Edit Amount (₹):", item.amount);
+        if (newAmountStr === null) return;
+        
+        const newAmount = parseFloat(newAmountStr);
+        if (isNaN(newAmount) || newAmount <= 0) {
+            alert("Invalid amount entered.");
+            return;
+        }
+
+        try {
+            await updateDoc(doc(db, colName, id), { 
+                name: newName.trim(), 
+                amount: Math.round(newAmount * 100) / 100 
+            });
+            showToast("Record updated successfully!");
+        } catch (err) {
+            console.error(err);
+            showToast('Error updating record.');
+        }
+    }
+
+    // TRASH CONTROLS
     window.moveToTrash = async function(colName, id) {
         if (confirm("Move this record to the trash bin?")) {
             try { await updateDoc(doc(db, colName, id), { status: 'deleted' }); showToast('Moved to trash'); }
@@ -1077,7 +1200,7 @@
         }
     }
 
-    // --- MANUAL ADD RECORD (With Transaction for Funds) ---
+    // MANUAL ADD RECORD 
     window.addRecord = async function(type) {
         const isFund = type === 'fund';
         const dateInput = document.getElementById(isFund ? 'fundDate' : 'expDate').value;
@@ -1103,6 +1226,7 @@
                 const counterRef = doc(db, "metadata", "receiptCounter");
                 let newReceiptNo = "";
                 let newDocId = "";
+                let itemData = null;
 
                 await runTransaction(db, async (transaction) => {
                     const counterDoc = await transaction.get(counterRef);
@@ -1115,18 +1239,18 @@
 
                     const fundRef = doc(collection(db, "funds"));
                     newDocId = fundRef.id;
-                    transaction.set(fundRef, {
+                    
+                    itemData = {
                         name, amount: Math.round(amount * 100) / 100, date: dateInput,
                         mobile, receiptNo: newReceiptNo, status: 'active', timestamp: new Date().getTime(), source: 'manual'
-                    });
+                    };
+                    transaction.set(fundRef, itemData);
                 });
                 
                 nameInput.value = ''; amountInput.value = ''; document.getElementById('memberMobile').value = '';
                 showToast(`Fund added! Receipt: ${newReceiptNo}`);
                 
-                // Fetch the new doc to generate PDF
-                const docSnap = await getFirestore(app).collection("funds").doc(newDocId).get();
-                if(docSnap.exists) { generateReceiptPDF(newDocId, newReceiptNo, docSnap.data()); }
+                generateReceiptPDF(newDocId, newReceiptNo, itemData);
 
             } else {
                 await addDoc(collection(db, "expenses"), {
@@ -1145,7 +1269,9 @@
     document.getElementById('addFundBtn').addEventListener('click', () => window.addRecord('fund'));
     document.getElementById('addExpBtn').addEventListener('click', () => window.addRecord('exp'));
 
-    // ADMIN QR & Settings
+    // =====================================================================
+    // 8. ADMIN SETTINGS & SHARING
+    // =====================================================================
     function renderAdminQr() {
         const frame = document.getElementById('adminQrFrame');
         const removeBtn = document.getElementById('removeQrBtn');
@@ -1192,7 +1318,7 @@
     });
 
     // =====================================================================
-    // PDF GENERATION (Using uploaded Marathi chanda pauti.png)
+    // 9. PDF EXPORTS & RECEIPTS
     // =====================================================================
     window.generateReceiptPDF = async function(docId, forcedReceiptNo = null, forcedData = null) {
         let donation = forcedData || contributions.find(d => d.id === docId);
@@ -1224,15 +1350,15 @@
             pdf.save(fileName);
         } catch(e) {
             console.error("PDF generation failed", e);
-            showToast('Error building PDF. Make sure chanda pauti.png exists.');
+            showToast('Error building PDF. Make sure chanda pauti.png exists in folder.');
         }
     };
 
-    // --- EXCEL EXPORT (Using SheetJS) ---
+    // EXCEL EXPORT (Uses current filter)
     document.getElementById('excelBtn').addEventListener('click', () => {
-        const activeFunds = contributions.filter(c => c.status !== 'deleted');
-        const activeExps = expenses.filter(e => e.status !== 'deleted');
-        if (activeFunds.length === 0 && activeExps.length === 0) { showToast('No records to export'); return; }
+        const activeFunds = contributions.filter(c => c.status !== 'deleted' && matchesFilters(c));
+        const activeExps = expenses.filter(e => e.status !== 'deleted' && matchesFilters(e));
+        if (activeFunds.length === 0 && activeExps.length === 0) { showToast('No records to export in current filter'); return; }
 
         const exportData = [];
         activeFunds.forEach(f => exportData.push({
@@ -1252,11 +1378,11 @@
         const ws = XLSX.utils.json_to_sheet(exportData);
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "Register");
-        XLSX.writeFile(wb, `Gajkarna_Report_${localToday}.xlsx`);
+        XLSX.writeFile(wb, `Gajkarna_Report_${activeMonthFilter || 'All'}.xlsx`);
         showToast('Excel downloaded');
     });
 
-    // --- PDF REPORT (Kept from original codebase but uses new JS) ---
+    // FULL REPORT PDF (Uses current filter)
     document.getElementById('pdfBtn').addEventListener('click', () => {
         const incSummary = document.getElementById('pdfSummary').checked;
         const incFunds = document.getElementById('pdfFunds').checked;
@@ -1264,8 +1390,8 @@
 
         if (!incSummary && !incFunds && !incExps) return alert("Select at least one option.");
 
-        const activeFunds = contributions.filter(c => c.status !== 'deleted');
-        const activeExps = expenses.filter(e => e.status !== 'deleted');
+        const activeFunds = contributions.filter(c => c.status !== 'deleted' && matchesFilters(c));
+        const activeExps = expenses.filter(e => e.status !== 'deleted' && matchesFilters(e));
 
         let tFund = 0; activeFunds.forEach(f => tFund += f.amount);
         let tExp = 0; activeExps.forEach(e => tExp += e.amount);
@@ -1275,10 +1401,12 @@
         pdfContainer.style.padding = '30px';
         pdfContainer.style.fontFamily = "Georgia, 'Times New Roman', serif";
 
+        let filterText = activeMonthFilter ? `Report for ${monthLabel(activeMonthFilter)}` : `Complete Register Report`;
+
         let pdfHTML = `
             <div style="text-align: center; margin-bottom: 30px; border-bottom: 3px double #c2540a; padding-bottom: 16px;">
                 <h1 style="color: #c2540a; margin:0; font-size: 28px;">GAJKARNA GROUP</h1>
-                <p style="color: #79716a; margin-top:6px; font-size: 13px;">Fund Register Report · ${formatDate(localToday)}</p>
+                <p style="color: #79716a; margin-top:6px; font-size: 13px;">${filterText} · Generated ${formatDate(localToday)}</p>
             </div>
         `;
 
@@ -1310,7 +1438,7 @@
         }
 
         pdfContainer.innerHTML = pdfHTML;
-        const opt = { margin: 0.5, filename: 'Gajkarna_Report.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' } };
+        const opt = { margin: 0.5, filename: `Gajkarna_Report_${activeMonthFilter || 'All'}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' } };
 
         html2pdf().set(opt).from(pdfContainer).save().then(() => { pdfContainer.style.display = 'none'; });
     });
