@@ -761,7 +761,7 @@
         const fundsQuery = query(collection(db, "funds"), orderBy("date", "desc"));
         onSnapshot(fundsQuery, (snapshot) => {
             contributions = [];
-            snapshot.forEach((doc) => contributions.push({ id: doc.id, .....doc.data() }));
+            snapshot.forEach((doc) => contributions.push({ id: doc.id, ...doc.data() }));
             rebuildMonthFilterOptions();
             updateUI();
         }, (err) => {
@@ -771,7 +771,7 @@
         const expQuery = query(collection(db, "expenses"), orderBy("date", "desc"));
         onSnapshot(expQuery, (snapshot) => {
             expenses = [];
-            snapshot.forEach((doc) => expenses.push({ id: doc.id, .....doc.data() }));
+            snapshot.forEach((doc) => expenses.push({ id: doc.id, ...doc.data() }));
             rebuildMonthFilterOptions();
             updateUI();
         }, (err) => {
@@ -781,7 +781,7 @@
         const pendingQuery = query(collection(db, "pendingDonations"), orderBy("timestamp", "desc"));
         onSnapshot(pendingQuery, (snapshot) => {
             pendingDonations = [];
-            snapshot.forEach((doc) => pendingDonations.push({ id: doc.id, .....doc.data() }));
+            snapshot.forEach((doc) => pendingDonations.push({ id: doc.id, ...doc.data() }));
             renderPending();
         }, () => {});
 
@@ -1127,7 +1127,7 @@
                 const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
 
                 try {
-                    await setDoc(doc(db, "settings", "donationInfo"), { .....donationSettings, qrImage: dataUrl }, { merge: true });
+                    await setDoc(doc(db, "settings", "donationInfo"), { ...donationSettings, qrImage: dataUrl }, { merge: true });
                     showToast('QR code uploaded');
                 } catch (err) { showToast('Could not save QR — check connection'); }
             };
@@ -1140,7 +1140,7 @@
     document.getElementById('removeQrBtn').addEventListener('click', async () => {
         if (!confirm('Remove the donation QR code?')) return;
         try {
-            await setDoc(doc(db, "settings", "donationInfo"), { .....donationSettings, qrImage: '' }, { merge: true });
+            await setDoc(doc(db, "settings", "donationInfo"), { ...donationSettings, qrImage: '' }, { merge: true });
             showToast('QR code removed');
         } catch (err) { showToast('Could not remove QR'); }
     });
@@ -1148,7 +1148,7 @@
     document.getElementById('saveUpiBtn').addEventListener('click', async () => {
         const upiId = document.getElementById('upiIdInput').value.trim();
         try {
-            await setDoc(doc(db, "settings", "donationInfo"), { .....donationSettings, upiId }, { merge: true });
+            await setDoc(doc(db, "settings", "donationInfo"), { ...donationSettings, upiId }, { merge: true });
             showToast('Saved');
         } catch (err) { showToast('Could not save — check connection'); }
     });
