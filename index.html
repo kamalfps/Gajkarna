@@ -1,0 +1,1318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <title>Gajkarna Group · Fund Register</title>
+
+    <link rel="icon" href="logo1.jpg" type="image/jpeg">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --ink: #1c1917;
+            --paper: #faf6f0;
+            --paper-raised: #ffffff;
+            --rule: #e3dccf;
+            --saffron: #c2540a;
+            --saffron-dim: #f3e3d4;
+            --sage: #3d7a5c;
+            --sage-dim: #e6efe9;
+            --terracotta: #b43a33;
+            --terracotta-dim: #f5e3e1;
+            --gold: #ad8327;
+            --gold-dim: #f6ecd6;
+            --text-muted: #79716a;
+            --shadow: 0 1px 2px rgba(28,25,23,0.04), 0 4px 14px rgba(28,25,23,0.06);
+            --shadow-lg: 0 4px 10px rgba(28,25,23,0.06), 0 14px 30px rgba(28,25,23,0.09);
+            --radius: 14px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+        }
+
+        html { -webkit-text-size-adjust: 100%; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--paper);
+            background-image:
+                radial-gradient(circle at 10% 0%, rgba(194,84,10,0.06), transparent 40%),
+                linear-gradient(var(--rule) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 36px;
+            color: var(--ink);
+            padding: 14px;
+            line-height: 1.5;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .ledger-num { font-variant-numeric: tabular-nums; }
+
+        h1, h2, .display-font { font-family: 'Fraunces', Georgia, serif; }
+
+        /* ============ LOGIN ============ */
+        #loginScreen {
+            max-width: 380px; margin: 12vh auto; background: var(--paper-raised); padding: 38px 28px;
+            border-radius: 20px; box-shadow: var(--shadow-lg); text-align: center;
+            border: 1px solid var(--rule);
+            animation: riseIn 0.5s ease both;
+        }
+        @keyframes riseIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .login-logo { width: 68px; height: 68px; border-radius: 50%; margin-bottom: 16px; object-fit: cover; background: var(--saffron-dim); box-shadow: 0 0 0 4px var(--saffron-dim); }
+        #loginScreen h2 { color: var(--ink); font-size: 23px; font-weight: 600; margin-bottom: 6px; }
+        #loginScreen .sub { color: var(--text-muted); font-size: 14px; margin-bottom: 24px; }
+        #pinInput {
+            width: 100%; padding: 15px; font-size: 22px; text-align: center; border: 1.5px solid var(--rule);
+            border-radius: 12px; margin-bottom: 14px; letter-spacing: 8px; font-family: 'Inter', sans-serif;
+            background: var(--paper);
+        }
+        #pinInput:focus { outline: none; border-color: var(--saffron); }
+        .login-btn {
+            width: 100%; padding: 14px; background: var(--saffron); color: white; border: none;
+            border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; transition: opacity 0.15s;
+        }
+        .login-btn:hover { opacity: 0.92; }
+        .login-btn:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid var(--saffron); outline-offset: 2px; }
+        #loginError { color: var(--terracotta); font-size: 13px; min-height: 18px; margin-top: 12px; }
+        #lockoutNotice { color: var(--terracotta); font-size: 13px; margin-top: 12px; display: none; }
+
+        #mainDashboard, #donatePage { display: none; max-width: 640px; margin: 0 auto; }
+
+        /* ============ HEADER ============ */
+        .top-card {
+            background-color: var(--paper-raised); padding: 28px 20px; border-radius: var(--radius);
+            box-shadow: var(--shadow); text-align: center; margin-bottom: 16px; border: 1px solid var(--rule);
+            position: relative; overflow: hidden;
+        }
+        .top-card::before {
+            content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+            background: linear-gradient(90deg, var(--saffron), var(--gold), var(--sage));
+        }
+        .logo-img { width: 68px; height: 68px; border-radius: 50%; object-fit: cover; margin-bottom: 10px; background-color: var(--saffron-dim); box-shadow: 0 0 0 4px var(--saffron-dim); }
+        .group-name { color: var(--ink); font-size: 26px; font-weight: 600; letter-spacing: 0.2px; margin-bottom: 2px; }
+        .group-tagline { color: var(--text-muted); font-size: 13px; margin-bottom: 18px; font-style: italic; }
+
+        .toolbar { display: flex; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 13px 16px;
+            border-radius: 11px; border: 1px solid transparent; font-weight: 600; font-size: 13.5px;
+            cursor: pointer; transition: opacity 0.15s, transform 0.1s; flex: 1; min-width: 0; white-space: nowrap;
+        }
+        .btn:active { transform: scale(0.97); }
+        .btn-primary { background-color: var(--ink); color: #fff; }
+        .btn-secondary { background-color: var(--paper); color: var(--ink); border-color: var(--rule); }
+        .btn-donate { background-color: var(--sage); color: #fff; }
+        .btn:hover { opacity: 0.92; }
+
+        .pdf-options { background: var(--paper); padding: 14px; border-radius: 10px; margin-bottom: 12px; border: 1px solid var(--rule); text-align: left; }
+        .pdf-options-title { font-size: 13px; font-weight: 600; margin-bottom: 10px; color: var(--text-muted); }
+        .checkbox-group { display: flex; flex-wrap: wrap; gap: 14px; font-size: 14px; }
+        .checkbox-group label { cursor: pointer; display: flex; align-items: center; gap: 6px; font-weight: 500; }
+        .checkbox-group input { cursor: pointer; width: 16px; height: 16px; accent-color: var(--saffron); }
+
+        /* ============ SUMMARY ============ */
+        .summary-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+        .financial-card {
+            background-color: var(--paper-raised); padding: 16px 8px; border-radius: var(--radius);
+            box-shadow: var(--shadow); text-align: center; border: 1px solid var(--rule);
+            border-bottom: 3px solid transparent;
+        }
+        .financial-card.collected { border-bottom-color: var(--sage); }
+        .financial-card.expenses { border-bottom-color: var(--terracotta); }
+        .financial-card.balance { border-bottom-color: var(--gold); }
+        .card-label { color: var(--text-muted); font-size: 10.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 6px; }
+        .card-value { font-size: 19px; font-weight: 700; font-family: 'Fraunces', serif; word-break: break-word; }
+        .value-collected { color: var(--sage); }
+        .value-expenses { color: var(--terracotta); }
+        .value-balance { color: var(--gold); }
+
+        /* ============ MONTH FILTER ============ */
+        .filter-bar {
+            background-color: var(--paper-raised); padding: 14px 16px; border-radius: var(--radius);
+            box-shadow: var(--shadow); margin-bottom: 16px; border: 1px solid var(--rule);
+            display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+        }
+        .filter-bar label { font-size: 13px; font-weight: 600; color: var(--text-muted); }
+        .filter-bar select {
+            flex: 1; min-width: 140px; padding: 10px; border: 1px solid var(--rule); border-radius: 8px;
+            font-size: 14px; background: var(--paper); color: var(--ink); font-family: inherit;
+        }
+        .filter-clear { font-size: 12px; color: var(--saffron); text-decoration: underline; cursor: pointer; background: none; border: none; padding: 4px; }
+
+        /* ============ FORM CARDS ============ */
+        .form-card { background-color: var(--paper-raised); padding: 20px 18px; border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 16px; border: 1px solid var(--rule); }
+        .section-title { font-size: 17px; font-weight: 600; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 2px solid var(--rule); display: flex; justify-content: space-between; align-items: center; font-family: 'Fraunces', serif;}
+        .section-title .count-pill { font-size: 11px; font-weight: 600; background: var(--paper); color: var(--text-muted); padding: 3px 9px; border-radius: 99px; font-family: 'Inter', sans-serif; }
+        .text-success { color: var(--sage); }
+        .text-danger { color: var(--terracotta); }
+        .text-history { color: var(--text-muted); }
+        .text-gold { color: var(--gold); }
+
+        .form-row { display: flex; gap: 10px; }
+        .form-row .form-group { flex: 1; }
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; font-size: 13px; margin-bottom: 5px; color: var(--text-muted); font-weight: 500;}
+        input[type="date"], input[type="text"], input[type="number"] {
+            width: 100%; padding: 12px 11px; border: 1px solid var(--rule); border-radius: 9px; font-size: 16px;
+            font-family: inherit; background: var(--paper); color: var(--ink);
+        }
+        input:focus { outline: none; border-color: var(--saffron); }
+
+        .submit-btn { width: 100%; padding: 14px; border: none; border-radius: 9px; color: white; font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 6px; transition: opacity 0.15s, transform 0.1s; }
+        .submit-btn:active { transform: scale(0.99); }
+        .btn-add { background-color: var(--sage); }
+        .btn-exp { background-color: var(--terracotta); }
+        .btn-gold { background-color: var(--gold); }
+        .field-error { color: var(--terracotta); font-size: 12px; margin-top: 6px; display: none; }
+        .field-hint { color: var(--text-muted); font-size: 12px; margin-top: 6px; }
+
+        /* ============ SEARCH ============ */
+        .search-row { position: relative; margin-bottom: 12px; }
+        .search-row input { padding-left: 36px; }
+        .search-row i { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 13px; }
+
+        /* ============ LISTS ============ */
+        ul { list-style: none; margin-top: 4px; max-height: 320px; overflow-y: auto; }
+        li {
+            display: flex; justify-content: space-between; align-items: center; padding: 12px 4px;
+            border-bottom: 1px solid var(--rule); gap: 8px;
+        }
+        li:last-child { border-bottom: none; }
+        .item-info { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+        .item-name { font-weight: 600; font-size: 14.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .item-date { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+        .item-amount { font-weight: 700; font-size: 14.5px; white-space: nowrap; }
+        .item-actions { display: flex; gap: 6px; flex-shrink: 0; align-items: center; }
+        .icon-btn {
+            background: var(--paper); color: var(--text-muted); border: 1px solid var(--rule); width: 30px; height: 30px;
+            border-radius: 8px; cursor: pointer; font-size: 12px; display: inline-flex; align-items: center; justify-content: center;
+            transition: background 0.15s; flex-shrink: 0;
+        }
+        .icon-btn:hover { background: var(--rule); }
+        .icon-btn.danger:hover { background: var(--terracotta-dim); color: var(--terracotta); }
+        .icon-btn.success:hover { background: var(--sage-dim); color: var(--sage); }
+        .icon-btn.gold:hover { background: var(--gold-dim); color: var(--gold); }
+        .empty-row { text-align: center; color: var(--text-muted); font-size: 13.5px; padding: 24px 10px; }
+
+        /* ============ HISTORY ============ */
+        .history-card { background-color: var(--paper-raised); border-style: dashed; }
+        .clear-history-btn { background: var(--paper); color: var(--text-muted); border: 1px solid var(--rule); padding: 6px 12px; border-radius: 8px; font-size: 12px; cursor: pointer; font-family: 'Inter', sans-serif; font-weight: 600;}
+        #historyList li { opacity: 0.75; }
+
+        /* ============ TOP CONTRIBUTORS ============ */
+        .leaderboard-item { display: flex; align-items: center; justify-content: space-between; padding: 9px 4px; border-bottom: 1px solid var(--rule); }
+        .leaderboard-item:last-child { border-bottom: none; }
+        .lb-rank { font-family: 'Fraunces', serif; font-weight: 600; color: var(--gold); width: 22px; }
+        .lb-name { flex: 1; font-weight: 500; font-size: 14px; padding-left: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .lb-amount { font-weight: 700; color: var(--sage); font-size: 14px; }
+
+        /* ============ DONATION / QR CARD ============ */
+        .donate-card-inner { text-align: center; }
+        .qr-frame {
+            width: 100%; max-width: 260px; aspect-ratio: 1/1; margin: 0 auto 14px; border-radius: 16px;
+            border: 2px dashed var(--rule); display: flex; align-items: center; justify-content: center;
+            overflow: hidden; background: var(--paper); position: relative;
+        }
+        .qr-frame img { width: 100%; height: 100%; object-fit: contain; background: #fff; }
+        .qr-placeholder { color: var(--text-muted); font-size: 13px; padding: 20px; }
+        .qr-placeholder i { font-size: 26px; display: block; margin-bottom: 8px; color: var(--rule); }
+        .qr-actions { display: flex; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+        .qr-actions .btn { flex: 1; min-width: 120px; padding: 11px 12px; font-size: 13px; }
+        .link-box {
+            display: flex; align-items: center; gap: 8px; background: var(--paper); border: 1px solid var(--rule);
+            border-radius: 10px; padding: 10px 12px; margin-bottom: 12px;
+        }
+        .link-box input { border: none; background: transparent; flex: 1; font-size: 12.5px; color: var(--text-muted); padding: 0; min-width: 0; }
+        .link-box input:focus { outline: none; }
+        .share-row { display: flex; gap: 10px; flex-wrap: wrap; }
+        .share-row .btn { flex: 1; min-width: 130px; font-size: 13px; padding: 12px; }
+        .btn-whatsapp { background-color: #3d9a5c; color: #fff; }
+
+        .pending-badge {
+            display: inline-flex; align-items: center; justify-content: center; background: var(--gold); color: #fff;
+            font-size: 11px; font-weight: 700; border-radius: 99px; min-width: 20px; height: 20px; padding: 0 6px;
+        }
+        .pending-item { border-left: 3px solid var(--gold); padding-left: 10px !important; }
+
+        /* ============ PUBLIC DONATE PAGE ============ */
+        .donate-hero { text-align: center; padding: 30px 20px 24px; }
+        .donate-hero .logo-img { margin-bottom: 14px; }
+        .donate-hero h1 { font-size: 25px; margin-bottom: 6px; }
+        .donate-hero p { color: var(--text-muted); font-size: 14px; }
+        .back-link { display: inline-flex; align-items: center; gap: 6px; color: var(--text-muted); font-size: 13px; text-decoration: none; margin-bottom: 14px; cursor: pointer; background: none; border: none; font-family: inherit; }
+        .success-panel { text-align: center; padding: 30px 16px; }
+        .success-panel i { font-size: 40px; color: var(--sage); margin-bottom: 14px; display: block; }
+        .success-panel h3 { font-size: 19px; margin-bottom: 8px; }
+        .success-panel p { color: var(--text-muted); font-size: 14px; }
+
+        /* ============ RECEIPT PREVIEW ============ */
+        .receipt-paper {
+            font-family: Georgia, 'Times New Roman', serif; padding: 34px 30px; background: #fffdf9;
+            border: 1px solid #e3dccf; max-width: 480px; margin: 0 auto;
+        }
+
+        /* ============ TOAST ============ */
+        #toast {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(20px);
+            background: var(--ink); color: var(--paper); padding: 12px 20px; border-radius: 10px;
+            font-size: 14px; font-weight: 500; box-shadow: var(--shadow); opacity: 0; pointer-events: none;
+            transition: opacity 0.25s, transform 0.25s; z-index: 999; max-width: 90vw; text-align: center;
+        }
+        #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+        .sync-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--sage); margin-right: 6px; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+        .sync-status { font-size: 12px; color: var(--text-muted); text-align: center; margin-bottom: 14px; }
+
+        #pdfContent, #receiptContent { display: none; }
+
+        @media (max-width: 380px) {
+            body { padding: 10px; }
+            .summary-row { grid-template-columns: 1fr 1fr; }
+            .financial-card.balance { grid-column: span 2; }
+            .toolbar .btn { flex-basis: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="loginScreen">
+    <img src="logo1.jpg" alt="Logo" class="login-logo" onerror="this.onerror=null; this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png';">
+    <h2>Gajkarna Group</h2>
+    <p class="sub">Enter the PIN to open the register.</p>
+    <input type="password" id="pinInput" placeholder="• • • •" inputmode="numeric" maxlength="12" autocomplete="off">
+    <button class="login-btn" onclick="checkPin()">Unlock</button>
+    <p id="loginError"></p>
+    <p id="lockoutNotice"></p>
+    <p style="margin-top:16px;"><button class="back-link" id="goDonatePublic" style="margin:0 auto;"><i class="fas fa-heart"></i> Just want to donate? Tap here</button></p>
+</div>
+
+<!-- ============ PUBLIC DONATION PAGE ============ -->
+<div id="donatePage">
+    <div class="top-card donate-hero">
+        <img src="logo1.jpg" alt="Logo" class="logo-img" onerror="this.onerror=null; this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png';">
+        <h1 class="group-name">Gajkarna Group</h1>
+        <p>Scan, pay, and let us know — your contribution will appear here soon.</p>
+    </div>
+
+    <div class="form-card" id="publicQrCard">
+        <div class="donate-card-inner">
+            <div class="qr-frame" id="publicQrFrame">
+                <div class="qr-placeholder"><i class="fas fa-qrcode"></i>The group hasn't uploaded a QR code yet.</div>
+            </div>
+            <div class="link-box" id="publicUpiBox" style="display:none;">
+                <span style="font-size:13px; color:var(--text-muted);">UPI ID:</span>
+                <input type="text" id="publicUpiId" readonly>
+                <button class="icon-btn" id="copyUpiBtn" title="Copy UPI ID"><i class="fas fa-copy"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-card" id="publicFormCard">
+        <h2 class="section-title text-success"><span>Tell us about your contribution</span></h2>
+        <div class="form-group"><label>Your name</label><input type="text" id="pubName" placeholder="Enter your name"></div>
+        <div class="form-row">
+            <div class="form-group"><label>Amount paid (₹)</label><input type="number" id="pubAmount" placeholder="0" min="0" step="0.01"></div>
+            <div class="form-group"><label>Date paid</label><input type="date" id="pubDate"></div>
+        </div>
+        <div class="form-group"><label>Note (optional)</label><input type="text" id="pubNote" placeholder="e.g. Paid via UPI"></div>
+        <p class="field-error" id="pubError"></p>
+        <button class="submit-btn btn-add" id="pubSubmitBtn">Submit for confirmation</button>
+        <p class="field-hint" style="text-align:center; margin-top:10px;">The group admin will review and confirm this in the register.</p>
+    </div>
+
+    <div class="form-card" id="pubSuccessCard" style="display:none;">
+        <div class="success-panel">
+            <i class="fas fa-circle-check"></i>
+            <h3>Thank you!</h3>
+            <p>Your contribution has been sent for confirmation. It will show up in the register once the admin approves it.</p>
+        </div>
+    </div>
+
+    <p style="text-align:center; margin-top:6px;">
+        <button class="back-link" id="backToLoginBtn" style="margin:0 auto;"><i class="fas fa-arrow-left"></i> Back to login</button>
+    </p>
+</div>
+
+<div id="mainDashboard">
+    <div class="top-card">
+        <img src="logo1.jpg" alt="Logo" class="logo-img" onerror="this.onerror=null; this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png';">
+        <h1 class="group-name">Gajkarna Group</h1>
+        <p class="group-tagline">Community fund register</p>
+
+        <div class="toolbar">
+            <button class="btn btn-secondary" id="logoutBtn"><i class="fas fa-lock"></i> Lock</button>
+            <button class="btn btn-secondary" id="leaderboardToggle"><i class="fas fa-ranking-star"></i> Top Givers</button>
+        </div>
+
+        <div class="pdf-options">
+            <p class="pdf-options-title">Include in PDF report</p>
+            <div class="checkbox-group">
+                <label><input type="checkbox" id="pdfSummary" checked> Summary</label>
+                <label><input type="checkbox" id="pdfFunds" checked> Contributions</label>
+                <label><input type="checkbox" id="pdfExps" checked> Expenses</label>
+            </div>
+        </div>
+
+        <div class="toolbar">
+            <button class="btn btn-primary" id="pdfBtn"><i class="fas fa-file-pdf"></i> Download PDF</button>
+            <button class="btn btn-primary" id="csvBtn"><i class="fas fa-file-csv"></i> Export CSV</button>
+        </div>
+    </div>
+
+    <p class="sync-status"><span class="sync-dot"></span><span id="syncLabel">Synced to cloud</span></p>
+
+    <div class="summary-row">
+        <div class="financial-card collected">
+            <div class="card-label">Collected</div>
+            <div class="card-value value-collected ledger-num" id="totalCollected">₹0</div>
+        </div>
+        <div class="financial-card expenses">
+            <div class="card-label">Spent</div>
+            <div class="card-value value-expenses ledger-num" id="totalExpenses">₹0</div>
+        </div>
+        <div class="financial-card balance">
+            <div class="card-label">Balance</div>
+            <div class="card-value value-balance ledger-num" id="currentBalance">₹0</div>
+        </div>
+    </div>
+
+    <div class="filter-bar">
+        <label for="monthFilter"><i class="fas fa-calendar-days"></i></label>
+        <select id="monthFilter">
+            <option value="">All months</option>
+        </select>
+        <button class="filter-clear" id="clearFilterBtn" style="display:none;">Clear</button>
+    </div>
+
+    <div class="form-card" id="leaderboardCard" style="display:none;">
+        <h2 class="section-title text-history"><span><i class="fas fa-ranking-star"></i> Top Contributors</span></h2>
+        <div id="leaderboardList"></div>
+    </div>
+
+    <!-- ============ DONATION QR & LINK CARD ============ -->
+    <div class="form-card">
+        <h2 class="section-title text-gold"><span><i class="fas fa-qrcode"></i> Collect Donations</span></h2>
+        <div class="donate-card-inner">
+            <div class="qr-frame" id="adminQrFrame">
+                <div class="qr-placeholder"><i class="fas fa-qrcode"></i>No QR code uploaded yet.</div>
+            </div>
+            <div class="qr-actions">
+                <button class="btn btn-secondary" id="uploadQrBtn"><i class="fas fa-upload"></i> Upload QR</button>
+                <button class="btn btn-secondary" id="removeQrBtn" style="display:none;"><i class="fas fa-trash"></i> Remove</button>
+            </div>
+            <input type="file" id="qrFileInput" accept="image/*" style="display:none;">
+        </div>
+        <div class="form-group">
+            <label>UPI ID / payment note (shown on the donate page)</label>
+            <input type="text" id="upiIdInput" placeholder="e.g. gajkarnagroup@upi">
+        </div>
+        <button class="submit-btn btn-gold" id="saveUpiBtn">Save</button>
+
+        <p class="field-hint" style="margin: 16px 0 8px; font-weight:600; color: var(--ink);">Share the donation link</p>
+        <div class="link-box">
+            <input type="text" id="donateLinkBox" readonly>
+            <button class="icon-btn" id="copyLinkBtn" title="Copy link"><i class="fas fa-copy"></i></button>
+        </div>
+        <div class="share-row">
+            <button class="btn btn-whatsapp" id="shareWhatsappBtn"><i class="fab fa-whatsapp"></i> Share on WhatsApp</button>
+        </div>
+    </div>
+
+    <!-- ============ PENDING DONATIONS ============ -->
+    <div class="form-card" id="pendingCard" style="display:none;">
+        <h2 class="section-title text-gold">
+            <span><i class="fas fa-hourglass-half"></i> Pending Donations</span>
+            <span class="count-pill" id="pendingCount">0</span>
+        </h2>
+        <ul id="pendingList"></ul>
+    </div>
+
+    <div class="form-card">
+        <h2 class="section-title text-success"><span>Add Contribution</span></h2>
+        <div class="form-row">
+            <div class="form-group"><label>Date</label><input type="date" id="fundDate"></div>
+        </div>
+        <div class="form-group"><label>Member name</label><input type="text" id="memberName" placeholder="Enter name"></div>
+        <div class="form-group">
+            <label>Amount (₹)</label><input type="number" id="memberAmount" placeholder="0" min="0" step="0.01">
+            <p class="field-error" id="fundError"></p>
+        </div>
+        <button class="submit-btn btn-add" id="addFundBtn">Add fund</button>
+
+        <div class="search-row" style="margin-top:18px;">
+            <i class="fas fa-magnifying-glass"></i>
+            <input type="text" id="fundSearch" placeholder="Search contributions…">
+        </div>
+        <h2 class="section-title text-success" style="border:none; padding-bottom:0; margin-bottom:6px; font-size:14px;">
+            <span>Log</span><span class="count-pill" id="fundCount">0</span>
+        </h2>
+        <ul id="contributionList"></ul>
+    </div>
+
+    <div class="form-card">
+        <h2 class="section-title text-danger"><span>Add Expense</span></h2>
+        <div class="form-row">
+            <div class="form-group"><label>Date</label><input type="date" id="expDate"></div>
+        </div>
+        <div class="form-group"><label>Expense detail</label><input type="text" id="expenseName" placeholder="What was purchased?"></div>
+        <div class="form-group">
+            <label>Amount (₹)</label><input type="number" id="expenseAmount" placeholder="0" min="0" step="0.01">
+            <p class="field-error" id="expError"></p>
+        </div>
+        <button class="submit-btn btn-exp" id="addExpBtn">Deduct expense</button>
+
+        <div class="search-row" style="margin-top:18px;">
+            <i class="fas fa-magnifying-glass"></i>
+            <input type="text" id="expSearch" placeholder="Search expenses…">
+        </div>
+        <h2 class="section-title text-danger" style="border:none; padding-bottom:0; margin-bottom:6px; font-size:14px;">
+            <span>Log</span><span class="count-pill" id="expCount">0</span>
+        </h2>
+        <ul id="expenseList"></ul>
+    </div>
+
+    <div class="form-card history-card">
+        <h2 class="section-title text-history">
+            <span><i class="fas fa-trash-can"></i> Trash Bin</span>
+            <button class="clear-history-btn" onclick="emptyTrash()">Empty bin</button>
+        </h2>
+        <ul id="historyList"></ul>
+    </div>
+
+    <p style="text-align:center; font-size:11px; color:var(--text-muted); margin: 8px 0 24px;">
+        Gajkarna Group · records sync live to all devices signed in with the PIN
+    </p>
+</div>
+
+<div id="pdfContent"></div>
+<div id="receiptContent"></div>
+<div id="toast"></div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, updateDoc, setDoc, getDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+    // =====================================================================
+    // SECURITY NOTE — read this before relying on the PIN screen
+    // =====================================================================
+    // This PIN gate only hides the UI. It does NOT protect your Firestore
+    // data: anyone can view-source, read the Firebase config below, and
+    // talk to your database directly with their own code, bypassing this
+    // page entirely. The PIN's purpose is to keep casual visitors out of
+    // the *interface* — it is not a security boundary by itself. The new
+    // public donation page is designed to be reachable without the PIN,
+    // so it only ever writes to "pendingDonations" — never directly to
+    // "funds" — which keeps real totals under admin control.
+    //
+    // The real fix lives in the Firebase Console, not in this file:
+    // Firestore Database → Rules, and paste something like:
+    //
+    //   rules_version = '2';
+    //   service cloud.firestore {
+    //     match /databases/{database}/documents {
+    //       match /funds/{id}    { allow read, write: if request.time < timestamp.date(2027,1,1); }
+    //       match /expenses/{id} { allow read, write: if request.time < timestamp.date(2027,1,1); }
+    //       match /pendingDonations/{id} { allow read, write: if request.time < timestamp.date(2027,1,1); }
+    //       match /settings/{id} { allow read, write: if request.time < timestamp.date(2027,1,1); }
+    //     }
+    //   }
+    //
+    // That's still open-by-default (matches your current setup) but at
+    // least time-boxes it. For real protection, look into Firebase
+    // Anonymous Auth or App Check, which require more setup than a
+    // single HTML file can provide. I can walk you through either if
+    // you'd like — just ask.
+    // =====================================================================
+
+    const SECRET_PIN = "1523";
+    const MAX_ATTEMPTS = 5;
+    const LOCKOUT_MS = 30000;
+    let failedAttempts = parseInt(sessionStorage.getItem('ggFailedAttempts') || '0', 10);
+    let lockoutUntil = parseInt(sessionStorage.getItem('ggLockoutUntil') || '0', 10);
+
+    function updateLockoutUI() {
+        const now = Date.now();
+        const loginBtn = document.querySelector('.login-btn');
+        const lockoutEl = document.getElementById('lockoutNotice');
+        if (lockoutUntil > now) {
+            const secsLeft = Math.ceil((lockoutUntil - now) / 1000);
+            loginBtn.disabled = true;
+            loginBtn.style.opacity = '0.5';
+            lockoutEl.style.display = 'block';
+            lockoutEl.textContent = `Too many attempts. Try again in ${secsLeft}s.`;
+            setTimeout(updateLockoutUI, 1000);
+        } else {
+            loginBtn.disabled = false;
+            loginBtn.style.opacity = '1';
+            lockoutEl.style.display = 'none';
+        }
+    }
+    updateLockoutUI();
+
+    window.checkPin = function() {
+        const now = Date.now();
+        if (lockoutUntil > now) return;
+
+        const enteredPin = document.getElementById('pinInput').value;
+        if (enteredPin === SECRET_PIN) {
+            failedAttempts = 0;
+            sessionStorage.setItem('ggFailedAttempts', '0');
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('donatePage').style.display = 'none';
+            document.getElementById('mainDashboard').style.display = 'block';
+            startRealtimeSync();
+        } else {
+            failedAttempts++;
+            sessionStorage.setItem('ggFailedAttempts', String(failedAttempts));
+            document.getElementById('pinInput').value = '';
+            const errorEl = document.getElementById('loginError');
+            if (failedAttempts >= MAX_ATTEMPTS) {
+                lockoutUntil = Date.now() + LOCKOUT_MS;
+                sessionStorage.setItem('ggLockoutUntil', String(lockoutUntil));
+                failedAttempts = 0;
+                sessionStorage.setItem('ggFailedAttempts', '0');
+                errorEl.textContent = '';
+                updateLockoutUI();
+            } else {
+                errorEl.textContent = `Incorrect PIN. ${MAX_ATTEMPTS - failedAttempts} attempt(s) left.`;
+            }
+        }
+    }
+
+    document.getElementById('pinInput').addEventListener("keypress", function(event) {
+        if (event.key === "Enter") window.checkPin();
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+        document.getElementById('mainDashboard').style.display = 'none';
+        document.getElementById('loginScreen').style.display = 'block';
+        document.getElementById('pinInput').value = '';
+        document.getElementById('pinInput').focus();
+    });
+
+    // --- FIREBASE CONFIG ---
+    const firebaseConfig = {
+  apiKey: "AIzaSyAe1mZbAfdICSTbprjRz1vbbJJwRRtsTvE",
+  authDomain: "gajkarna-f515d.firebaseapp.com",
+  projectId: "gajkarna-f515d",
+  storageBucket: "gajkarna-f515d.firebasestorage.app",
+  messagingSenderId: "147288053718",
+  appId: "1:147288053718:web:2aba3e8d23c75599403677"
+};
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // --- DATE HELPERS ---
+    const d = new Date();
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    const localToday = `${year}-${month}-${day}`;
+
+    document.getElementById('fundDate').value = localToday;
+    document.getElementById('expDate').value = localToday;
+    document.getElementById('pubDate').value = localToday;
+
+    let contributions = [];
+    let expenses = [];
+    let pendingDonations = [];
+    let donationSettings = { qrImage: '', upiId: '' };
+    let activeMonthFilter = '';
+    let fundSearchTerm = '';
+    let expSearchTerm = '';
+
+    function formatDate(dateString) {
+        if (!dateString) return '';
+        const parts = dateString.split('-');
+        if (parts.length === 3) {
+            const dateObj = new Date(parts[0], parts[1] - 1, parts[2]);
+            return dateObj.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+        }
+        return new Date(dateString).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+    }
+
+    function monthKey(dateString) {
+        if (!dateString) return '';
+        return dateString.slice(0, 7); // "YYYY-MM"
+    }
+
+    function monthLabel(key) {
+        const [y, m] = key.split('-');
+        const dt = new Date(parseInt(y), parseInt(m) - 1, 1);
+        return dt.toLocaleDateString('en-IN', { month: 'long', year: 'numeric' });
+    }
+
+    function showToast(msg) {
+        const toast = document.getElementById('toast');
+        toast.textContent = msg;
+        toast.classList.add('show');
+        clearTimeout(window._toastTimer);
+        window._toastTimer = setTimeout(() => toast.classList.remove('show'), 2400);
+    }
+
+    function escapeHtml(str) {
+        const d = document.createElement('div');
+        d.textContent = str;
+        return d.innerHTML;
+    }
+
+    // =====================================================================
+    // PUBLIC DONATION LINK ROUTING (no PIN needed)
+    // =====================================================================
+    function donationLinkUrl() {
+        return `${location.origin}${location.pathname}?donate=1`;
+    }
+
+    function showDonatePage() {
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('mainDashboard').style.display = 'none';
+        document.getElementById('donatePage').style.display = 'block';
+        watchDonationSettingsPublic();
+    }
+
+    document.getElementById('goDonatePublic').addEventListener('click', () => {
+        history.replaceState(null, '', '?donate=1');
+        showDonatePage();
+    });
+    document.getElementById('backToLoginBtn').addEventListener('click', () => {
+        history.replaceState(null, '', location.pathname);
+        document.getElementById('donatePage').style.display = 'none';
+        document.getElementById('loginScreen').style.display = 'block';
+    });
+
+    function renderPublicQr() {
+        const frame = document.getElementById('publicQrFrame');
+        if (donationSettings.qrImage) {
+            frame.innerHTML = `<img src="${donationSettings.qrImage}" alt="Donation QR code">`;
+        } else {
+            frame.innerHTML = `<div class="qr-placeholder"><i class="fas fa-qrcode"></i>The group hasn't uploaded a QR code yet.</div>`;
+        }
+        const upiBox = document.getElementById('publicUpiBox');
+        if (donationSettings.upiId) {
+            upiBox.style.display = 'flex';
+            document.getElementById('publicUpiId').value = donationSettings.upiId;
+        } else {
+            upiBox.style.display = 'none';
+        }
+    }
+
+    let publicSettingsUnsub = null;
+    function watchDonationSettingsPublic() {
+        if (publicSettingsUnsub) return;
+        publicSettingsUnsub = onSnapshot(doc(db, "settings", "donationInfo"), (snap) => {
+            if (snap.exists()) donationSettings = snap.data();
+            renderPublicQr();
+        }, () => { renderPublicQr(); });
+    }
+
+    document.getElementById('copyUpiBtn').addEventListener('click', () => {
+        const val = document.getElementById('publicUpiId').value;
+        navigator.clipboard.writeText(val).then(() => showToast('UPI ID copied')).catch(() => showToast('Could not copy'));
+    });
+
+    document.getElementById('pubSubmitBtn').addEventListener('click', async () => {
+        const name = document.getElementById('pubName').value.trim();
+        const amount = parseFloat(document.getElementById('pubAmount').value);
+        const dateVal = document.getElementById('pubDate').value;
+        const note = document.getElementById('pubNote').value.trim();
+        const errorEl = document.getElementById('pubError');
+        const btn = document.getElementById('pubSubmitBtn');
+        errorEl.style.display = 'none';
+
+        if (!name) { errorEl.textContent = 'Enter your name.'; errorEl.style.display = 'block'; return; }
+        if (isNaN(amount) || amount <= 0) { errorEl.textContent = 'Enter an amount greater than ₹0.'; errorEl.style.display = 'block'; return; }
+        if (!dateVal) { errorEl.textContent = 'Pick a date.'; errorEl.style.display = 'block'; return; }
+        if (amount > 10000000) { errorEl.textContent = 'That amount looks too large — please check it.'; errorEl.style.display = 'block'; return; }
+
+        btn.disabled = true; btn.textContent = 'Submitting…';
+        try {
+            await addDoc(collection(db, "pendingDonations"), {
+                name, amount: Math.round(amount * 100) / 100, date: dateVal, note,
+                status: 'pending', timestamp: new Date().getTime()
+            });
+            document.getElementById('publicFormCard').style.display = 'none';
+            document.getElementById('pubSuccessCard').style.display = 'block';
+        } catch (err) {
+            errorEl.textContent = 'Could not submit — check your connection and try again.';
+            errorEl.style.display = 'block';
+        } finally {
+            btn.disabled = false; btn.textContent = 'Submit for confirmation';
+        }
+    });
+
+    // Route on load
+    if (new URLSearchParams(location.search).get('donate') === '1') {
+        showDonatePage();
+    }
+
+    // --- REALTIME SYNC (admin dashboard) ---
+    function startRealtimeSync() {
+        const fundsQuery = query(collection(db, "funds"), orderBy("date", "desc"));
+        onSnapshot(fundsQuery, (snapshot) => {
+            contributions = [];
+            snapshot.forEach((doc) => contributions.push({ id: doc.id, ...doc.data() }));
+            rebuildMonthFilterOptions();
+            updateUI();
+        }, (err) => {
+            document.getElementById('syncLabel').textContent = 'Sync error — check connection';
+        });
+
+        const expQuery = query(collection(db, "expenses"), orderBy("date", "desc"));
+        onSnapshot(expQuery, (snapshot) => {
+            expenses = [];
+            snapshot.forEach((doc) => expenses.push({ id: doc.id, ...doc.data() }));
+            rebuildMonthFilterOptions();
+            updateUI();
+        }, (err) => {
+            document.getElementById('syncLabel').textContent = 'Sync error — check connection';
+        });
+
+        const pendingQuery = query(collection(db, "pendingDonations"), orderBy("timestamp", "desc"));
+        onSnapshot(pendingQuery, (snapshot) => {
+            pendingDonations = [];
+            snapshot.forEach((doc) => pendingDonations.push({ id: doc.id, ...doc.data() }));
+            renderPending();
+        }, () => {});
+
+        onSnapshot(doc(db, "settings", "donationInfo"), (snap) => {
+            if (snap.exists()) donationSettings = snap.data();
+            renderAdminQr();
+        }, () => {});
+
+        document.getElementById('donateLinkBox').value = donationLinkUrl();
+    }
+
+    function rebuildMonthFilterOptions() {
+        const select = document.getElementById('monthFilter');
+        const prevValue = select.value;
+        const keys = new Set();
+        contributions.forEach(c => { if (c.status !== 'deleted') keys.add(monthKey(c.date)); });
+        expenses.forEach(e => { if (e.status !== 'deleted') keys.add(monthKey(e.date)); });
+        const sorted = Array.from(keys).filter(Boolean).sort().reverse();
+        select.innerHTML = '<option value="">All months</option>' +
+            sorted.map(k => `<option value="${k}">${monthLabel(k)}</option>`).join('');
+        if (sorted.includes(prevValue)) select.value = prevValue;
+    }
+
+    document.getElementById('monthFilter').addEventListener('change', (e) => {
+        activeMonthFilter = e.target.value;
+        document.getElementById('clearFilterBtn').style.display = activeMonthFilter ? 'inline-block' : 'none';
+        updateUI();
+    });
+    document.getElementById('clearFilterBtn').addEventListener('click', () => {
+        activeMonthFilter = '';
+        document.getElementById('monthFilter').value = '';
+        document.getElementById('clearFilterBtn').style.display = 'none';
+        updateUI();
+    });
+    document.getElementById('fundSearch').addEventListener('input', (e) => {
+        fundSearchTerm = e.target.value.toLowerCase();
+        updateUI();
+    });
+    document.getElementById('expSearch').addEventListener('input', (e) => {
+        expSearchTerm = e.target.value.toLowerCase();
+        updateUI();
+    });
+
+    document.getElementById('leaderboardToggle').addEventListener('click', () => {
+        const card = document.getElementById('leaderboardCard');
+        card.style.display = card.style.display === 'none' ? 'block' : 'none';
+        if (card.style.display === 'block') card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+
+    // HTML ROW BUILDERS
+    function createActiveRow(item, colName) {
+        const color = colName === 'funds' ? 'text-success' : 'text-danger';
+        const safeName = escapeHtml(item.name);
+        const receiptBtn = colName === 'funds'
+            ? `<button class="icon-btn gold" onclick="generateReceipt('${item.id}')" title="Generate receipt"><i class="fas fa-receipt"></i></button>`
+            : '';
+        return `
+            <li>
+                <div class="item-info">
+                    <span class="item-name">${safeName}</span>
+                    <span class="item-date">${formatDate(item.date)}</span>
+                </div>
+                <div class="item-actions">
+                    <span class="item-amount ${color} ledger-num">₹${item.amount.toLocaleString('en-IN')}</span>
+                    ${receiptBtn}
+                    <button class="icon-btn danger" onclick="moveToTrash('${colName}', '${item.id}')" title="Move to trash"><i class="fas fa-trash"></i></button>
+                </div>
+            </li>`;
+    }
+
+    function createHistoryRow(item, colName) {
+        const isFund = colName === 'funds';
+        const color = isFund ? 'text-success' : 'text-danger';
+        const sign = isFund ? '+' : '−';
+        const safeName = escapeHtml(item.name);
+        return `
+            <li>
+                <div class="item-info">
+                    <span class="item-name" style="text-decoration: line-through; color: var(--text-muted);">${safeName}</span>
+                    <span class="item-date">Orig: ${formatDate(item.date)}</span>
+                </div>
+                <div class="item-actions">
+                    <span class="item-amount ${color} ledger-num">${sign}₹${item.amount.toLocaleString('en-IN')}</span>
+                    <button class="icon-btn success" onclick="restoreItem('${colName}', '${item.id}')" title="Restore"><i class="fas fa-rotate-left"></i></button>
+                    <button class="icon-btn danger" onclick="permDelete('${colName}', '${item.id}')" title="Delete forever"><i class="fas fa-xmark"></i></button>
+                </div>
+            </li>`;
+    }
+
+    function createPendingRow(item) {
+        const safeName = escapeHtml(item.name);
+        const safeNote = item.note ? `<span class="item-date">${escapeHtml(item.note)}</span>` : '';
+        return `
+            <li class="pending-item">
+                <div class="item-info">
+                    <span class="item-name">${safeName}</span>
+                    <span class="item-date">${formatDate(item.date)}</span>
+                    ${safeNote}
+                </div>
+                <div class="item-actions">
+                    <span class="item-amount text-gold ledger-num">₹${item.amount.toLocaleString('en-IN')}</span>
+                    <button class="icon-btn success" onclick="approvePending('${item.id}')" title="Approve"><i class="fas fa-check"></i></button>
+                    <button class="icon-btn danger" onclick="rejectPending('${item.id}')" title="Reject"><i class="fas fa-xmark"></i></button>
+                </div>
+            </li>`;
+    }
+
+    function matchesFilters(item) {
+        if (activeMonthFilter && monthKey(item.date) !== activeMonthFilter) return false;
+        return true;
+    }
+
+    function updateUI() {
+        let totalFund = 0, totalExp = 0, historyCount = 0;
+        let visibleFundCount = 0, visibleExpCount = 0;
+
+        const contList = document.getElementById('contributionList');
+        const expList = document.getElementById('expenseList');
+        const histList = document.getElementById('historyList');
+
+        contList.innerHTML = ''; expList.innerHTML = ''; histList.innerHTML = '';
+
+        contributions.forEach((item) => {
+            if (item.status === 'deleted') {
+                histList.innerHTML += createHistoryRow(item, 'funds');
+                historyCount++;
+                return;
+            }
+            if (!matchesFilters(item)) return;
+            totalFund += item.amount;
+            if (fundSearchTerm && !item.name.toLowerCase().includes(fundSearchTerm)) return;
+            visibleFundCount++;
+            contList.innerHTML += createActiveRow(item, 'funds');
+        });
+
+        expenses.forEach((item) => {
+            if (item.status === 'deleted') {
+                histList.innerHTML += createHistoryRow(item, 'expenses');
+                historyCount++;
+                return;
+            }
+            if (!matchesFilters(item)) return;
+            totalExp += item.amount;
+            if (expSearchTerm && !item.name.toLowerCase().includes(expSearchTerm)) return;
+            visibleExpCount++;
+            expList.innerHTML += createActiveRow(item, 'expenses');
+        });
+
+        if (historyCount === 0) histList.innerHTML = `<p class="empty-row">Trash is empty.</p>`;
+        if (visibleFundCount === 0) contList.innerHTML = `<p class="empty-row">${fundSearchTerm || activeMonthFilter ? 'No contributions match.' : 'No contributions yet. Add the first one above.'}</p>`;
+        if (visibleExpCount === 0) expList.innerHTML = `<p class="empty-row">${expSearchTerm || activeMonthFilter ? 'No expenses match.' : 'No expenses yet.'}</p>`;
+
+        document.getElementById('fundCount').textContent = visibleFundCount;
+        document.getElementById('expCount').textContent = visibleExpCount;
+
+        document.getElementById('totalCollected').innerText = `₹${totalFund.toLocaleString('en-IN')}`;
+        document.getElementById('totalExpenses').innerText = `₹${totalExp.toLocaleString('en-IN')}`;
+        document.getElementById('currentBalance').innerText = `₹${(totalFund - totalExp).toLocaleString('en-IN')}`;
+
+        updateLeaderboard();
+    }
+
+    function updateLeaderboard() {
+        const totals = {};
+        contributions.forEach(c => {
+            if (c.status === 'deleted') return;
+            const key = c.name.trim().toLowerCase();
+            if (!totals[key]) totals[key] = { name: c.name, amount: 0 };
+            totals[key].amount += c.amount;
+        });
+        const sorted = Object.values(totals).sort((a, b) => b.amount - a.amount).slice(0, 8);
+        const list = document.getElementById('leaderboardList');
+        if (sorted.length === 0) {
+            list.innerHTML = `<p class="empty-row">No contributions yet.</p>`;
+            return;
+        }
+        list.innerHTML = sorted.map((item, idx) => `
+            <div class="leaderboard-item">
+                <span class="lb-rank">${idx + 1}.</span>
+                <span class="lb-name">${escapeHtml(item.name)}</span>
+                <span class="lb-amount ledger-num">₹${item.amount.toLocaleString('en-IN')}</span>
+            </div>
+        `).join('');
+    }
+
+    function renderPending() {
+        const card = document.getElementById('pendingCard');
+        const list = document.getElementById('pendingList');
+        const countEl = document.getElementById('pendingCount');
+        if (pendingDonations.length === 0) {
+            card.style.display = 'none';
+            return;
+        }
+        card.style.display = 'block';
+        countEl.textContent = pendingDonations.length;
+        list.innerHTML = pendingDonations.map(createPendingRow).join('');
+    }
+
+    window.approvePending = async function(id) {
+        const item = pendingDonations.find(p => p.id === id);
+        if (!item) return;
+        try {
+            await addDoc(collection(db, "funds"), {
+                name: item.name, amount: item.amount, date: item.date,
+                status: 'active', timestamp: new Date().getTime(),
+                source: 'donation-link'
+            });
+            await deleteDoc(doc(db, "pendingDonations", id));
+            showToast('Approved and added to contributions');
+        } catch (err) { showToast('Could not approve — check connection'); }
+    }
+    window.rejectPending = async function(id) {
+        if (!confirm('Reject this pending donation? It will not be added to the register.')) return;
+        try {
+            await deleteDoc(doc(db, "pendingDonations", id));
+            showToast('Rejected');
+        } catch (err) { showToast('Could not reject item'); }
+    }
+
+    // --- GLOBAL TRASH FUNCTIONS ---
+    window.moveToTrash = async function(colName, id) {
+        if (confirm("Move this record to the trash bin?")) {
+            try {
+                await updateDoc(doc(db, colName, id), { status: 'deleted' });
+                showToast('Moved to trash');
+            } catch (err) { showToast('Could not move item — check connection'); }
+        }
+    }
+    window.restoreItem = async function(colName, id) {
+        try {
+            await updateDoc(doc(db, colName, id), { status: 'active' });
+            showToast('Restored');
+        } catch (err) { showToast('Could not restore item'); }
+    }
+    window.permDelete = async function(colName, id) {
+        if (confirm("Permanently delete this record? This cannot be undone.")) {
+            try {
+                await deleteDoc(doc(db, colName, id));
+                showToast('Deleted permanently');
+            } catch (err) { showToast('Could not delete item'); }
+        }
+    }
+    window.emptyTrash = async function() {
+        if (confirm("Empty the trash? All deleted items will be gone forever from the cloud.")) {
+            const delFunds = contributions.filter(c => c.status === 'deleted');
+            const delExps = expenses.filter(e => e.status === 'deleted');
+            try {
+                for (let f of delFunds) await deleteDoc(doc(db, "funds", f.id));
+                for (let e of delExps) await deleteDoc(doc(db, "expenses", e.id));
+                showToast('Trash emptied');
+            } catch (err) { showToast('Could not empty trash fully'); }
+        }
+    }
+
+    // --- ADD RECORD (with validation) ---
+    window.addRecord = async function(type) {
+        const isFund = type === 'fund';
+        const dateInput = document.getElementById(isFund ? 'fundDate' : 'expDate').value;
+        const nameInput = document.getElementById(isFund ? 'memberName' : 'expenseName');
+        const amountInput = document.getElementById(isFund ? 'memberAmount' : 'expenseAmount');
+        const errorEl = document.getElementById(isFund ? 'fundError' : 'expError');
+        const submitBtn = document.getElementById(isFund ? 'addFundBtn' : 'addExpBtn');
+
+        const name = nameInput.value.trim();
+        const amount = parseFloat(amountInput.value);
+        const targetCollection = isFund ? "funds" : "expenses";
+
+        errorEl.style.display = 'none';
+
+        if (!name) { errorEl.textContent = isFund ? 'Enter the member name.' : 'Enter what was purchased.'; errorEl.style.display = 'block'; nameInput.focus(); return; }
+        if (!dateInput) { errorEl.textContent = 'Pick a date.'; errorEl.style.display = 'block'; return; }
+        if (isNaN(amount) || amount <= 0) { errorEl.textContent = 'Enter an amount greater than ₹0.'; errorEl.style.display = 'block'; amountInput.focus(); return; }
+        if (amount > 10000000) { errorEl.textContent = 'That amount looks too large — please check it.'; errorEl.style.display = 'block'; return; }
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Saving…';
+
+        try {
+            await addDoc(collection(db, targetCollection), {
+                name: name,
+                amount: Math.round(amount * 100) / 100,
+                date: dateInput,
+                status: 'active',
+                timestamp: new Date().getTime()
+            });
+            nameInput.value = '';
+            amountInput.value = '';
+            showToast(isFund ? 'Contribution added' : 'Expense recorded');
+        } catch (err) {
+            console.error("Cloud Write Error: ", err);
+            errorEl.textContent = 'Could not save — check your connection and try again.';
+            errorEl.style.display = 'block';
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = isFund ? 'Add fund' : 'Deduct expense';
+        }
+    }
+
+    document.getElementById('addFundBtn').addEventListener('click', () => window.addRecord('fund'));
+    document.getElementById('addExpBtn').addEventListener('click', () => window.addRecord('exp'));
+
+    // =====================================================================
+    // DONATION QR UPLOAD + UPI ID
+    // =====================================================================
+    function renderAdminQr() {
+        const frame = document.getElementById('adminQrFrame');
+        const removeBtn = document.getElementById('removeQrBtn');
+        if (donationSettings.qrImage) {
+            frame.innerHTML = `<img src="${donationSettings.qrImage}" alt="Donation QR code">`;
+            removeBtn.style.display = 'inline-flex';
+        } else {
+            frame.innerHTML = `<div class="qr-placeholder"><i class="fas fa-qrcode"></i>No QR code uploaded yet.</div>`;
+            removeBtn.style.display = 'none';
+        }
+        document.getElementById('upiIdInput').value = donationSettings.upiId || '';
+    }
+
+    document.getElementById('uploadQrBtn').addEventListener('click', () => document.getElementById('qrFileInput').click());
+
+    document.getElementById('qrFileInput').addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        if (!file.type.startsWith('image/')) { showToast('Please choose an image file'); return; }
+
+        const img = new Image();
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+            img.onload = async () => {
+                // Downscale to keep the Firestore doc small
+                const maxDim = 500;
+                let { width, height } = img;
+                if (width > maxDim || height > maxDim) {
+                    const scale = maxDim / Math.max(width, height);
+                    width = Math.round(width * scale);
+                    height = Math.round(height * scale);
+                }
+                const canvas = document.createElement('canvas');
+                canvas.width = width; canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, width, height);
+                ctx.drawImage(img, 0, 0, width, height);
+                const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+
+                try {
+                    await setDoc(doc(db, "settings", "donationInfo"), { ...donationSettings, qrImage: dataUrl }, { merge: true });
+                    showToast('QR code uploaded');
+                } catch (err) { showToast('Could not save QR — check connection'); }
+            };
+            img.src = ev.target.result;
+        };
+        reader.readAsDataURL(file);
+        e.target.value = '';
+    });
+
+    document.getElementById('removeQrBtn').addEventListener('click', async () => {
+        if (!confirm('Remove the donation QR code?')) return;
+        try {
+            await setDoc(doc(db, "settings", "donationInfo"), { ...donationSettings, qrImage: '' }, { merge: true });
+            showToast('QR code removed');
+        } catch (err) { showToast('Could not remove QR'); }
+    });
+
+    document.getElementById('saveUpiBtn').addEventListener('click', async () => {
+        const upiId = document.getElementById('upiIdInput').value.trim();
+        try {
+            await setDoc(doc(db, "settings", "donationInfo"), { ...donationSettings, upiId }, { merge: true });
+            showToast('Saved');
+        } catch (err) { showToast('Could not save — check connection'); }
+    });
+
+    document.getElementById('copyLinkBtn').addEventListener('click', () => {
+        navigator.clipboard.writeText(donationLinkUrl()).then(() => showToast('Link copied')).catch(() => showToast('Could not copy'));
+    });
+
+    document.getElementById('shareWhatsappBtn').addEventListener('click', () => {
+        const text = encodeURIComponent(`🙏 Contribute to Gajkarna Group: ${donationLinkUrl()}`);
+        window.open(`https://wa.me/?text=${text}`, '_blank');
+    });
+
+    // =====================================================================
+    // RECEIPT GENERATOR (per contribution)
+    // =====================================================================
+    window.generateReceipt = function(fundId) {
+        const item = contributions.find(c => c.id === fundId);
+        if (!item) { showToast('Record not found'); return; }
+
+        const receiptNo = 'GJK-' + fundId.slice(-6).toUpperCase();
+        const container = document.getElementById('receiptContent');
+        container.style.display = 'block';
+
+        container.innerHTML = `
+            <div class="receipt-paper" style="border: 2px solid #ad8327;">
+                <div style="text-align:center; border-bottom: 2px double #c2540a; padding-bottom: 14px; margin-bottom: 18px;">
+                    <h1 style="color:#c2540a; font-size:24px; letter-spacing:0.5px;">GAJKARNA GROUP</h1>
+                    <p style="color:#79716a; font-size:12px; margin-top:4px;">Donation Receipt</p>
+                </div>
+                <table style="width:100%; font-size:14px; margin-bottom: 18px;">
+                    <tr><td style="padding:5px 0; color:#79716a;">Receipt No.</td><td style="padding:5px 0; text-align:right; font-weight:bold;">${receiptNo}</td></tr>
+                    <tr><td style="padding:5px 0; color:#79716a;">Date</td><td style="padding:5px 0; text-align:right; font-weight:bold;">${formatDate(item.date)}</td></tr>
+                    <tr><td style="padding:5px 0; color:#79716a;">Received from</td><td style="padding:5px 0; text-align:right; font-weight:bold;">${escapeHtml(item.name)}</td></tr>
+                </table>
+                <div style="background:#f3e3d4; border-radius:8px; padding:16px; text-align:center; margin-bottom:20px;">
+                    <p style="font-size:12px; color:#79716a; margin-bottom:4px;">AMOUNT RECEIVED</p>
+                    <p style="font-size:28px; font-weight:bold; color:#3d7a5c;">₹${item.amount.toLocaleString('en-IN')}</p>
+                </div>
+                <p style="font-size:13px; color:#1c1917; text-align:center; margin-bottom:22px;">With gratitude, Gajkarna Group acknowledges this contribution towards the community fund.</p>
+                <div style="border-top:1px dashed #e3dccf; padding-top:12px; text-align:center;">
+                    <p style="font-size:11px; color:#79716a;">Generated on ${formatDate(localToday)} · Gajkarna Group Fund Register</p>
+                </div>
+            </div>
+        `;
+
+        const opt = { margin: 0.4, filename: `Gajkarna_Receipt_${receiptNo}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'a5', orientation: 'portrait' } };
+        html2pdf().set(opt).from(container).save().then(() => {
+            container.style.display = 'none';
+        });
+    }
+
+    // --- CSV EXPORT ---
+    document.getElementById('csvBtn').addEventListener('click', () => {
+        const activeFunds = contributions.filter(c => c.status !== 'deleted');
+        const activeExps = expenses.filter(e => e.status !== 'deleted');
+
+        if (activeFunds.length === 0 && activeExps.length === 0) {
+            showToast('No records to export yet');
+            return;
+        }
+
+        const rows = [['Type', 'Date', 'Name / Detail', 'Amount (INR)']];
+        activeFunds.forEach(f => rows.push(['Contribution', f.date, f.name, f.amount]));
+        activeExps.forEach(e => rows.push(['Expense', e.date, e.name, -e.amount]));
+
+        const csvContent = rows.map(r => r.map(cell => {
+            const s = String(cell).replace(/"/g, '""');
+            return /[",\n]/.test(s) ? `"${s}"` : s;
+        }).join(',')).join('\n');
+
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `Gajkarna_Group_${localToday}.csv`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        showToast('CSV downloaded');
+    });
+
+    // --- PDF BUILDER ---
+    document.getElementById('pdfBtn').addEventListener('click', () => {
+        const incSummary = document.getElementById('pdfSummary').checked;
+        const incFunds = document.getElementById('pdfFunds').checked;
+        const incExps = document.getElementById('pdfExps').checked;
+
+        if (!incSummary && !incFunds && !incExps) {
+            alert("Please select at least one option (Summary, Contributions, or Expenses) to generate the PDF!");
+            return;
+        }
+
+        const activeFunds = contributions.filter(c => c.status !== 'deleted');
+        const activeExps = expenses.filter(e => e.status !== 'deleted');
+
+        let tFund = 0; activeFunds.forEach(f => tFund += f.amount);
+        let tExp = 0; activeExps.forEach(e => tExp += e.amount);
+
+        if (incFunds && !incExps && activeFunds.length === 0) {
+            alert("There are no active contributions to print!");
+            return;
+        }
+        if (incExps && !incFunds && activeExps.length === 0) {
+            alert("There are no active expenses to print!");
+            return;
+        }
+
+        const pdfContainer = document.getElementById('pdfContent');
+        pdfContainer.style.display = 'block';
+        pdfContainer.style.padding = '30px';
+        pdfContainer.style.fontFamily = "Georgia, 'Times New Roman', serif";
+
+        let pdfHTML = `
+            <div style="text-align: center; margin-bottom: 30px; border-bottom: 3px double #c2540a; padding-bottom: 16px;">
+                <h1 style="color: #c2540a; margin:0; font-size: 28px; letter-spacing: 0.5px;">GAJKARNA GROUP</h1>
+                <p style="color: #79716a; margin-top:6px; font-size: 13px;">Fund Register Report · Generated ${formatDate(localToday)}</p>
+            </div>
+        `;
+
+        if (incSummary) {
+            pdfHTML += `
+            <div style="display: flex; justify-content: space-between; background: #faf6f0; padding: 16px; border-radius: 4px; margin-bottom: 30px; border: 1px solid #e3dccf;">
+                <div style="text-align:center; flex:1;"><strong style="font-size:12px; color:#79716a;">TOTAL COLLECTED</strong><br><span style="color:#3d7a5c; font-size:20px; font-weight:bold;">₹${tFund.toLocaleString('en-IN')}</span></div>
+                <div style="text-align:center; flex:1;"><strong style="font-size:12px; color:#79716a;">TOTAL EXPENSES</strong><br><span style="color:#b43a33; font-size:20px; font-weight:bold;">₹${tExp.toLocaleString('en-IN')}</span></div>
+                <div style="text-align:center; flex:1;"><strong style="font-size:12px; color:#79716a;">FINAL BALANCE</strong><br><span style="color:#ad8327; font-size:20px; font-weight:bold;">₹${(tFund - tExp).toLocaleString('en-IN')}</span></div>
+            </div>`;
+        }
+
+        if (incFunds && activeFunds.length > 0) {
+            pdfHTML += `
+            <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px; font-size: 13px;">
+                <thead>
+                    <tr style="background: #3d7a5c; color: white;"><th colspan="3" style="padding: 10px; text-align: left;">Contributions Log</th></tr>
+                    <tr style="background: #e3dccf; color: #1c1917;"><th style="padding: 8px; text-align: left; border: 1px solid #ccc;">Date</th><th style="padding: 8px; text-align: left; border: 1px solid #ccc;">Member Name</th><th style="padding: 8px; text-align: right; border: 1px solid #ccc;">Amount</th></tr>
+                </thead>
+                <tbody>
+                    ${activeFunds.map(c => `<tr><td style="padding: 8px; border: 1px solid #ccc;">${formatDate(c.date)}</td><td style="padding: 8px; border: 1px solid #ccc;">${escapeHtml(c.name)}</td><td style="padding: 8px; text-align: right; border: 1px solid #ccc;">₹${c.amount.toLocaleString('en-IN')}</td></tr>`).join('')}
+                </tbody>
+            </table>`;
+        }
+
+        if (incExps && activeExps.length > 0) {
+            pdfHTML += `
+            <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+                <thead>
+                    <tr style="background: #b43a33; color: white;"><th colspan="3" style="padding: 10px; text-align: left;">Expenses Log</th></tr>
+                    <tr style="background: #e3dccf; color: #1c1917;"><th style="padding: 8px; text-align: left; border: 1px solid #ccc;">Date</th><th style="padding: 8px; text-align: left; border: 1px solid #ccc;">Expense Detail</th><th style="padding: 8px; text-align: right; border: 1px solid #ccc;">Amount</th></tr>
+                </thead>
+                <tbody>
+                    ${activeExps.map(e => `<tr><td style="padding: 8px; border: 1px solid #ccc;">${formatDate(e.date)}</td><td style="padding: 8px; border: 1px solid #ccc;">${escapeHtml(e.name)}</td><td style="padding: 8px; text-align: right; border: 1px solid #ccc;">₹${e.amount.toLocaleString('en-IN')}</td></tr>`).join('')}
+                </tbody>
+            </table>`;
+        }
+
+        pdfContainer.innerHTML = pdfHTML;
+        const opt = { margin: 0.5, filename: 'Gajkarna_Group_Report.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' } };
+
+        html2pdf().set(opt).from(pdfContainer).save().then(() => {
+            pdfContainer.style.display = 'none';
+        });
+    });
+</script>
+
+</body>
+</html>
