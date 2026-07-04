@@ -8,6 +8,10 @@
     <link rel="icon" href="logo1.jpg" type="image/jpeg">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -55,7 +59,6 @@
         }
 
         .ledger-num { font-variant-numeric: tabular-nums; }
-
         h1, h2, .display-font { font-family: 'Fraunces', Georgia, serif; }
 
         /* ============ LOGIN ============ */
@@ -161,7 +164,7 @@
         .form-row .form-group { flex: 1; }
         .form-group { margin-bottom: 12px; }
         .form-group label { display: block; font-size: 13px; margin-bottom: 5px; color: var(--text-muted); font-weight: 500;}
-        input[type="date"], input[type="text"], input[type="number"] {
+        input[type="date"], input[type="text"], input[type="number"], input[type="tel"] {
             width: 100%; padding: 12px 11px; border: 1px solid var(--rule); border-radius: 9px; font-size: 16px;
             font-family: inherit; background: var(--paper); color: var(--ink);
         }
@@ -172,8 +175,10 @@
         .btn-add { background-color: var(--sage); }
         .btn-exp { background-color: var(--terracotta); }
         .btn-gold { background-color: var(--gold); }
+        .btn-upi { background-color: #673ab7; }
         .field-error { color: var(--terracotta); font-size: 12px; margin-top: 6px; display: none; }
         .field-hint { color: var(--text-muted); font-size: 12px; margin-top: 6px; }
+        .hidden { display: none !important; }
 
         /* ============ SEARCH ============ */
         .search-row { position: relative; margin-bottom: 12px; }
@@ -254,12 +259,6 @@
         .success-panel h3 { font-size: 19px; margin-bottom: 8px; }
         .success-panel p { color: var(--text-muted); font-size: 14px; }
 
-        /* ============ RECEIPT PREVIEW ============ */
-        .receipt-paper {
-            font-family: Georgia, 'Times New Roman', serif; padding: 34px 30px; background: #fffdf9;
-            border: 1px solid #e3dccf; max-width: 480px; margin: 0 auto;
-        }
-
         /* ============ TOAST ============ */
         #toast {
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(20px);
@@ -273,7 +272,27 @@
         @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
         .sync-status { font-size: 12px; color: var(--text-muted); text-align: center; margin-bottom: 14px; }
 
-        #pdfContent, #receiptContent { display: none; }
+        #pdfContent { display: none; }
+
+        /* =========================================================
+           CHANDA PAUTI RECEIPT TEMPLATE (Overlaid on Image)
+           ========================================================= */
+        #receipt-template {
+            position: absolute; left: -9999px; top: 0;
+            width: 794px; height: 1123px; /* Standard Print Portrait */
+            background-image: url('chanda pauti.png'); /* YOUR IMAGE */
+            background-size: 100% 100%; background-repeat: no-repeat;
+            color: #4a2912; font-family: 'Arial', sans-serif;
+            font-size: 22px; font-weight: 600; z-index: -1;
+        }
+        .r-field { position: absolute; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        #r_receiptNo { top: 512px; left: 240px; }
+        #r_date      { top: 554px; left: 240px; }
+        #r_name      { top: 597px; left: 240px; width: 450px; }
+        #r_address   { top: 641px; left: 100px; width: 590px; } 
+        #r_amount    { top: 683px; left: 280px; font-size: 24px; font-weight: bold;}
+        #r_words     { top: 727px; left: 250px; width: 450px; white-space: normal; line-height: 1.8; font-size: 20px; }
+        #r_txndetails { top: 1000px; left: 100px; font-size: 16px; color: #555; font-weight: normal; }
 
         @media (max-width: 380px) {
             body { padding: 10px; }
@@ -300,33 +319,32 @@
     <div class="top-card donate-hero">
         <img src="logo1.jpg" alt="Logo" class="logo-img" onerror="this.onerror=null; this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png';">
         <h1 class="group-name">Gajkarna Group</h1>
-        <p>Scan, pay, and let us know — your contribution will appear here soon.</p>
-    </div>
-
-    <div class="form-card" id="publicQrCard">
-        <div class="donate-card-inner">
-            <div class="qr-frame" id="publicQrFrame">
-                <div class="qr-placeholder"><i class="fas fa-qrcode"></i>The group hasn't uploaded a QR code yet.</div>
-            </div>
-            <div class="link-box" id="publicUpiBox" style="display:none;">
-                <span style="font-size:13px; color:var(--text-muted);">UPI ID:</span>
-                <input type="text" id="publicUpiId" readonly>
-                <button class="icon-btn" id="copyUpiBtn" title="Copy UPI ID"><i class="fas fa-copy"></i></button>
-            </div>
-        </div>
+        <p>Complete your payment via UPI, then submit your details for confirmation.</p>
     </div>
 
     <div class="form-card" id="publicFormCard">
-        <h2 class="section-title text-success"><span>Tell us about your contribution</span></h2>
-        <div class="form-group"><label>Your name</label><input type="text" id="pubName" placeholder="Enter your name"></div>
+        <h2 class="section-title text-success"><span>Contribution Details</span></h2>
+        
+        <div class="form-group"><label>Your Full Name</label><input type="text" id="pubName" placeholder="Enter your name"></div>
+        <div class="form-group"><label>Mobile Number</label><input type="tel" id="pubMobile" placeholder="10-digit number" pattern="[0-9]{10}"></div>
+        <div class="form-group"><label>Address / Note</label><input type="text" id="pubNote" placeholder="E.g. Address or details"></div>
+        
         <div class="form-row">
-            <div class="form-group"><label>Amount paid (₹)</label><input type="number" id="pubAmount" placeholder="0" min="0" step="0.01"></div>
-            <div class="form-group"><label>Date paid</label><input type="date" id="pubDate"></div>
+            <div class="form-group"><label>Amount (₹)</label><input type="number" id="pubAmount" placeholder="0" min="1"></div>
+            <div class="form-group"><label>Date</label><input type="date" id="pubDate"></div>
         </div>
-        <div class="form-group"><label>Note (optional)</label><input type="text" id="pubNote" placeholder="e.g. Paid via UPI"></div>
+
+        <button class="submit-btn btn-upi" id="pubUpiBtn" onclick="initiateUPI()"><i class="fas fa-qrcode"></i> PAY VIA UPI</button>
         <p class="field-error" id="pubError"></p>
-        <button class="submit-btn btn-add" id="pubSubmitBtn">Submit for confirmation</button>
-        <p class="field-hint" style="text-align:center; margin-top:10px;">The group admin will review and confirm this in the register.</p>
+
+        <div id="postPaymentSection" class="hidden" style="margin-top: 20px; padding-top: 15px; border-top: 1px dashed var(--rule);">
+            <p style="font-weight:600; color:var(--terracotta); margin-bottom: 10px; font-size: 13px; text-align:center;">Please enter Transaction ID after completing payment.</p>
+            <div class="form-group">
+                <label>UPI Transaction ID</label>
+                <input type="text" id="pubTxnId" placeholder="e.g. 3021XXXXXXXX">
+            </div>
+            <button class="submit-btn btn-add" id="pubSubmitBtn">I HAVE PAID & SUBMIT</button>
+        </div>
     </div>
 
     <div class="form-card" id="pubSuccessCard" style="display:none;">
@@ -338,7 +356,7 @@
     </div>
 
     <p style="text-align:center; margin-top:6px;">
-        <button class="back-link" id="backToLoginBtn" style="margin:0 auto;"><i class="fas fa-arrow-left"></i> Back to login</button>
+        <button class="back-link" id="backToLoginBtn" style="margin:0 auto;"><i class="fas fa-arrow-left"></i> Admin Login</button>
     </p>
 </div>
 
@@ -364,7 +382,7 @@
 
         <div class="toolbar">
             <button class="btn btn-primary" id="pdfBtn"><i class="fas fa-file-pdf"></i> Download PDF</button>
-            <button class="btn btn-primary" id="csvBtn"><i class="fas fa-file-csv"></i> Export CSV</button>
+            <button class="btn btn-primary" id="excelBtn"><i class="fas fa-file-excel"></i> Export Excel</button>
         </div>
     </div>
 
@@ -411,10 +429,10 @@
             <input type="file" id="qrFileInput" accept="image/*" style="display:none;">
         </div>
         <div class="form-group">
-            <label>UPI ID / payment note (shown on the donate page)</label>
+            <label>UPI ID (For automatic Intent generation)</label>
             <input type="text" id="upiIdInput" placeholder="e.g. gajkarnagroup@upi">
         </div>
-        <button class="submit-btn btn-gold" id="saveUpiBtn">Save</button>
+        <button class="submit-btn btn-gold" id="saveUpiBtn">Save Settings</button>
 
         <p class="field-hint" style="margin: 16px 0 8px; font-weight:600; color: var(--ink);">Share the donation link</p>
         <div class="link-box">
@@ -435,20 +453,21 @@
     </div>
 
     <div class="form-card">
-        <h2 class="section-title text-success"><span>Add Contribution</span></h2>
+        <h2 class="section-title text-success"><span>Add Contribution (Manual)</span></h2>
         <div class="form-row">
             <div class="form-group"><label>Date</label><input type="date" id="fundDate"></div>
         </div>
         <div class="form-group"><label>Member name</label><input type="text" id="memberName" placeholder="Enter name"></div>
-        <div class="form-group">
-            <label>Amount (₹)</label><input type="number" id="memberAmount" placeholder="0" min="0" step="0.01">
-            <p class="field-error" id="fundError"></p>
+        <div class="form-row">
+            <div class="form-group"><label>Amount (₹)</label><input type="number" id="memberAmount" placeholder="0" min="0" step="0.01"></div>
+            <div class="form-group"><label>Mobile</label><input type="text" id="memberMobile" placeholder="Optional"></div>
         </div>
-        <button class="submit-btn btn-add" id="addFundBtn">Add fund</button>
+        <p class="field-error" id="fundError"></p>
+        <button class="submit-btn btn-add" id="addFundBtn">Add & Generate Receipt</button>
 
         <div class="search-row" style="margin-top:18px;">
             <i class="fas fa-magnifying-glass"></i>
-            <input type="text" id="fundSearch" placeholder="Search contributions…">
+            <input type="text" id="fundSearch" placeholder="Search Receipt, Name, Mobile…">
         </div>
         <h2 class="section-title text-success" style="border:none; padding-bottom:0; margin-bottom:6px; font-size:14px;">
             <span>Log</span><span class="count-pill" id="fundCount">0</span>
@@ -492,12 +511,21 @@
 </div>
 
 <div id="pdfContent"></div>
-<div id="receiptContent"></div>
 <div id="toast"></div>
+
+<div id="receipt-template">
+    <span class="r-field" id="r_receiptNo"></span>
+    <span class="r-field" id="r_date"></span>
+    <span class="r-field" id="r_name"></span>
+    <span class="r-field" id="r_address"></span>
+    <span class="r-field" id="r_amount"></span>
+    <span class="r-field" id="r_words"></span>
+    <span class="r-field" id="r_txndetails"></span>
+</div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, updateDoc, setDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, updateDoc, setDoc, query, orderBy, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
     const SECRET_PIN = "1523";
     const MAX_ATTEMPTS = 5;
@@ -592,7 +620,7 @@
     let contributions = [];
     let expenses = [];
     let pendingDonations = [];
-    let donationSettings = { qrImage: '', upiId: '' };
+    let donationSettings = { qrImage: '', upiId: 'gajkarna@upi' };
     let activeMonthFilter = '';
     let fundSearchTerm = '';
     let expSearchTerm = '';
@@ -627,17 +655,31 @@
     }
 
     function escapeHtml(str) {
-        const d = document.createElement('div');
-        d.textContent = str;
-        return d.innerHTML;
+        if(!str) return '';
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
+
+    // Number to Words for PDF Receipt
+    function numberToWords(num) {
+        const a = ['','One ','Two ','Three ','Four ', 'Five ','Six ','Seven ','Eight ','Nine ','Ten ','Eleven ','Twelve ','Thirteen ','Fourteen ','Fifteen ','Sixteen ','Seventeen ','Eighteen ','Nineteen '];
+        const b = ['', '', 'Twenty','Thirty','Forty','Fifty', 'Sixty','Seventy','Eighty','Ninety'];
+        if ((num = num.toString()).length > 9) return 'overflow';
+        let n = ('000000000' + num).substr(-9).match(/^(\d{2})(\d{2})(\d{2})(\d{1})(\d{2})$/);
+        if (!n) return; let str = '';
+        str += (n[1] != 0) ? (a[Number(n[1])] || b[n[1][0]] + ' ' + a[n[1][1]]) + 'Crore ' : '';
+        str += (n[2] != 0) ? (a[Number(n[2])] || b[n[2][0]] + ' ' + a[n[2][1]]) + 'Lakh ' : '';
+        str += (n[3] != 0) ? (a[Number(n[3])] || b[n[3][0]] + ' ' + a[n[3][1]]) + 'Thousand ' : '';
+        str += (n[4] != 0) ? (a[Number(n[4])] || b[n[4][0]] + ' ' + a[n[4][1]]) + 'Hundred ' : '';
+        str += (n[5] != 0) ? ((str != '') ? 'and ' : '') + (a[Number(n[5])] || b[n[5][0]] + ' ' + a[n[5][1]]) + 'Only ' : '';
+        return str;
     }
 
     // =====================================================================
-    // PUBLIC DONATION LINK ROUTING (no PIN needed)
+    // PUBLIC DONATION LINK ROUTING & UPI
     // =====================================================================
-    function donationLinkUrl() {
-        return `${location.origin}${location.pathname}?donate=1`;
-    }
+    function donationLinkUrl() { return `${location.origin}${location.pathname}?donate=1`; }
 
     function showDonatePage() {
         document.getElementById('loginScreen').style.display = 'none';
@@ -656,67 +698,69 @@
         document.getElementById('loginScreen').style.display = 'block';
     });
 
-    function renderPublicQr() {
-        const frame = document.getElementById('publicQrFrame');
-        if (donationSettings.qrImage) {
-            frame.innerHTML = `<img src="${donationSettings.qrImage}" alt="Donation QR code">`;
-        } else {
-            frame.innerHTML = `<div class="qr-placeholder"><i class="fas fa-qrcode"></i>The group hasn't uploaded a QR code yet.</div>`;
-        }
-        const upiBox = document.getElementById('publicUpiBox');
-        if (donationSettings.upiId) {
-            upiBox.style.display = 'flex';
-            document.getElementById('publicUpiId').value = donationSettings.upiId;
-        } else {
-            upiBox.style.display = 'none';
-        }
-    }
-
     let publicSettingsUnsub = null;
     function watchDonationSettingsPublic() {
         if (publicSettingsUnsub) return;
         publicSettingsUnsub = onSnapshot(doc(db, "settings", "donationInfo"), (snap) => {
             if (snap.exists()) donationSettings = snap.data();
-            renderPublicQr();
-        }, () => { renderPublicQr(); });
+        }, () => { });
     }
 
-    document.getElementById('copyUpiBtn').addEventListener('click', () => {
-        const val = document.getElementById('publicUpiId').value;
-        navigator.clipboard.writeText(val).then(() => showToast('UPI ID copied')).catch(() => showToast('Could not copy'));
-    });
+    window.initiateUPI = () => {
+        const amount = document.getElementById('pubAmount').value;
+        const errorEl = document.getElementById('pubError');
+        errorEl.style.display = 'none';
+        
+        if(!amount || amount <= 0) {
+            errorEl.textContent = 'Enter a valid amount first.';
+            errorEl.style.display = 'block';
+            return;
+        }
+
+        const upiId = donationSettings.upiId || 'gajkarna@upi';
+        const groupName = "Gajkarna Group";
+        const upiUrl = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(groupName)}&am=${amount}&cu=INR`;
+        
+        // Open Intent
+        window.location.href = upiUrl;
+        
+        // Reveal Txn ID section
+        document.getElementById('postPaymentSection').classList.remove('hidden');
+    };
 
     document.getElementById('pubSubmitBtn').addEventListener('click', async () => {
         const name = document.getElementById('pubName').value.trim();
+        const mobile = document.getElementById('pubMobile').value.trim();
         const amount = parseFloat(document.getElementById('pubAmount').value);
         const dateVal = document.getElementById('pubDate').value;
         const note = document.getElementById('pubNote').value.trim();
+        const txnId = document.getElementById('pubTxnId').value.trim();
+        
         const errorEl = document.getElementById('pubError');
         const btn = document.getElementById('pubSubmitBtn');
         errorEl.style.display = 'none';
 
         if (!name) { errorEl.textContent = 'Enter your name.'; errorEl.style.display = 'block'; return; }
-        if (isNaN(amount) || amount <= 0) { errorEl.textContent = 'Enter an amount greater than ₹0.'; errorEl.style.display = 'block'; return; }
+        if (isNaN(amount) || amount <= 0) { errorEl.textContent = 'Enter valid amount.'; errorEl.style.display = 'block'; return; }
         if (!dateVal) { errorEl.textContent = 'Pick a date.'; errorEl.style.display = 'block'; return; }
-        if (amount > 10000000) { errorEl.textContent = 'That amount looks too large — please check it.'; errorEl.style.display = 'block'; return; }
+        if (!txnId) { errorEl.textContent = 'Transaction ID is required after payment.'; errorEl.style.display = 'block'; return; }
 
         btn.disabled = true; btn.textContent = 'Submitting…';
         try {
             await addDoc(collection(db, "pendingDonations"), {
-                name, amount: Math.round(amount * 100) / 100, date: dateVal, note,
+                name, mobile, amount: Math.round(amount * 100) / 100, date: dateVal, address: note, txnId,
                 status: 'pending', timestamp: new Date().getTime()
             });
             document.getElementById('publicFormCard').style.display = 'none';
             document.getElementById('pubSuccessCard').style.display = 'block';
         } catch (err) {
-            errorEl.textContent = 'Could not submit — check your connection and try again.';
+            errorEl.textContent = 'Could not submit — check connection.';
             errorEl.style.display = 'block';
         } finally {
-            btn.disabled = false; btn.textContent = 'Submit for confirmation';
+            btn.disabled = false; btn.textContent = 'I HAVE PAID & SUBMIT';
         }
     });
 
-    // Route on load
     if (new URLSearchParams(location.search).get('donate') === '1') {
         showDonatePage();
     }
@@ -729,9 +773,7 @@
             snapshot.forEach((doc) => contributions.push({ id: doc.id, ...doc.data() }));
             rebuildMonthFilterOptions();
             updateUI();
-        }, (err) => {
-            document.getElementById('syncLabel').textContent = 'Sync error — check connection';
-        });
+        }, (err) => { document.getElementById('syncLabel').textContent = 'Sync error'; });
 
         const expQuery = query(collection(db, "expenses"), orderBy("date", "desc"));
         onSnapshot(expQuery, (snapshot) => {
@@ -739,8 +781,6 @@
             snapshot.forEach((doc) => expenses.push({ id: doc.id, ...doc.data() }));
             rebuildMonthFilterOptions();
             updateUI();
-        }, (err) => {
-            document.getElementById('syncLabel').textContent = 'Sync error — check connection';
         });
 
         const pendingQuery = query(collection(db, "pendingDonations"), orderBy("timestamp", "desc"));
@@ -748,12 +788,12 @@
             pendingDonations = [];
             snapshot.forEach((doc) => pendingDonations.push({ id: doc.id, ...doc.data() }));
             renderPending();
-        }, () => {});
+        });
 
         onSnapshot(doc(db, "settings", "donationInfo"), (snap) => {
             if (snap.exists()) donationSettings = snap.data();
             renderAdminQr();
-        }, () => {});
+        });
 
         document.getElementById('donateLinkBox').value = donationLinkUrl();
     }
@@ -800,14 +840,16 @@
     function createActiveRow(item, colName) {
         const color = colName === 'funds' ? 'text-success' : 'text-danger';
         const safeName = escapeHtml(item.name);
+        const receiptLbl = item.receiptNo ? `<span style="font-size:11px; color:#ad8327; display:block;">${item.receiptNo}</span>` : '';
         const receiptBtn = colName === 'funds'
-            ? `<button class="icon-btn gold" onclick="generateReceipt('${item.id}')" title="Generate receipt"><i class="fas fa-receipt"></i></button>`
+            ? `<button class="icon-btn gold" onclick="generateReceiptPDF('${item.id}')" title="Download PDF"><i class="fas fa-file-pdf"></i></button>`
             : '';
         return `
             <li>
                 <div class="item-info">
                     <span class="item-name">${safeName}</span>
                     <span class="item-date">${formatDate(item.date)}</span>
+                    ${receiptLbl}
                 </div>
                 <div class="item-actions">
                     <span class="item-amount ${color} ledger-num">₹${item.amount.toLocaleString('en-IN')}</span>
@@ -838,13 +880,15 @@
 
     function createPendingRow(item) {
         const safeName = escapeHtml(item.name);
-        const safeNote = item.note ? `<span class="item-date">${escapeHtml(item.note)}</span>` : '';
+        const safeNote = item.address ? `<span class="item-date">${escapeHtml(item.address)}</span>` : '';
+        const safeTxn = item.txnId ? `<span class="item-date" style="color:var(--saffron);">Txn: ${escapeHtml(item.txnId)}</span>` : '';
         return `
             <li class="pending-item">
                 <div class="item-info">
                     <span class="item-name">${safeName}</span>
                     <span class="item-date">${formatDate(item.date)}</span>
                     ${safeNote}
+                    ${safeTxn}
                 </div>
                 <div class="item-actions">
                     <span class="item-amount text-gold ledger-num">₹${item.amount.toLocaleString('en-IN')}</span>
@@ -872,12 +916,21 @@
         contributions.forEach((item) => {
             if (item.status === 'deleted') {
                 histList.innerHTML += createHistoryRow(item, 'funds');
-                historyCount++;
-                return;
+                historyCount++; return;
             }
             if (!matchesFilters(item)) return;
             totalFund += item.amount;
-            if (fundSearchTerm && !item.name.toLowerCase().includes(fundSearchTerm)) return;
+            
+            // Search by Name, ReceiptNo, Mobile or TxnId
+            if (fundSearchTerm) {
+                const term = fundSearchTerm;
+                const match = item.name.toLowerCase().includes(term) || 
+                              (item.receiptNo && item.receiptNo.toLowerCase().includes(term)) ||
+                              (item.mobile && item.mobile.includes(term)) ||
+                              (item.txnId && item.txnId.toLowerCase().includes(term));
+                if(!match) return;
+            }
+
             visibleFundCount++;
             contList.innerHTML += createActiveRow(item, 'funds');
         });
@@ -885,8 +938,7 @@
         expenses.forEach((item) => {
             if (item.status === 'deleted') {
                 histList.innerHTML += createHistoryRow(item, 'expenses');
-                historyCount++;
-                return;
+                historyCount++; return;
             }
             if (!matchesFilters(item)) return;
             totalExp += item.amount;
@@ -896,12 +948,11 @@
         });
 
         if (historyCount === 0) histList.innerHTML = `<p class="empty-row">Trash is empty.</p>`;
-        if (visibleFundCount === 0) contList.innerHTML = `<p class="empty-row">${fundSearchTerm || activeMonthFilter ? 'No contributions match.' : 'No contributions yet. Add the first one above.'}</p>`;
-        if (visibleExpCount === 0) expList.innerHTML = `<p class="empty-row">${expSearchTerm || activeMonthFilter ? 'No expenses match.' : 'No expenses yet.'}</p>`;
+        if (visibleFundCount === 0) contList.innerHTML = `<p class="empty-row">No contributions match.</p>`;
+        if (visibleExpCount === 0) expList.innerHTML = `<p class="empty-row">No expenses match.</p>`;
 
         document.getElementById('fundCount').textContent = visibleFundCount;
         document.getElementById('expCount').textContent = visibleExpCount;
-
         document.getElementById('totalCollected').innerText = `₹${totalFund.toLocaleString('en-IN')}`;
         document.getElementById('totalExpenses').innerText = `₹${totalExp.toLocaleString('en-IN')}`;
         document.getElementById('currentBalance').innerText = `₹${(totalFund - totalExp).toLocaleString('en-IN')}`;
@@ -928,38 +979,69 @@
                 <span class="lb-rank">${idx + 1}.</span>
                 <span class="lb-name">${escapeHtml(item.name)}</span>
                 <span class="lb-amount ledger-num">₹${item.amount.toLocaleString('en-IN')}</span>
-            </div>
-        `).join('');
+            </div>`).join('');
     }
 
     function renderPending() {
         const card = document.getElementById('pendingCard');
         const list = document.getElementById('pendingList');
         const countEl = document.getElementById('pendingCount');
-        if (pendingDonations.length === 0) {
-            card.style.display = 'none';
-            return;
-        }
+        if (pendingDonations.length === 0) { card.style.display = 'none'; return; }
         card.style.display = 'block';
         countEl.textContent = pendingDonations.length;
         list.innerHTML = pendingDonations.map(createPendingRow).join('');
     }
 
+    // =====================================================================
+    // AUTO RECEIPT GENERATION (Transaction)
+    // =====================================================================
     window.approvePending = async function(id) {
         const item = pendingDonations.find(p => p.id === id);
         if (!item) return;
+        
         try {
-            await addDoc(collection(db, "funds"), {
-                name: item.name, amount: item.amount, date: item.date,
-                status: 'active', timestamp: new Date().getTime(),
-                source: 'donation-link'
+            const counterRef = doc(db, "metadata", "receiptCounter");
+            let newReceiptNo = "";
+
+            await runTransaction(db, async (transaction) => {
+                const counterDoc = await transaction.get(counterRef);
+                let currentCount = 1;
+                if (counterDoc.exists()) { currentCount = counterDoc.data().count + 1; }
+                
+                transaction.set(counterRef, { count: currentCount }, { merge: true });
+                
+                const year = new Date().getFullYear();
+                const paddedCount = String(currentCount).padStart(4, '0');
+                newReceiptNo = `GK-${year}-${paddedCount}`;
+
+                const fundRef = doc(collection(db, "funds"));
+                transaction.set(fundRef, {
+                    name: item.name, amount: item.amount, date: item.date,
+                    mobile: item.mobile || '', address: item.address || '', txnId: item.txnId || '',
+                    receiptNo: newReceiptNo, status: 'active', timestamp: new Date().getTime(), source: 'donation-link'
+                });
+
+                const pendingRef = doc(db, "pendingDonations", id);
+                transaction.delete(pendingRef);
             });
-            await deleteDoc(doc(db, "pendingDonations", id));
-            showToast('Approved and added to contributions');
-        } catch (err) { showToast('Could not approve — check connection'); }
+
+            showToast(`Approved! Receipt ${newReceiptNo} generated.`);
+            
+            // Auto-download PDF
+            const justAdded = query(collection(db, "funds"), orderBy("timestamp", "desc"));
+            onSnapshot(justAdded, (snap) => {
+                if(snap.docs.length > 0 && snap.docs[0].data().receiptNo === newReceiptNo) {
+                    generateReceiptPDF(snap.docs[0].id, newReceiptNo);
+                }
+            }, (err)=>{});
+
+        } catch (err) { 
+            console.error(err); showToast('Approval failed — check connection'); 
+        }
     }
+    
     window.rejectPending = async function(id) {
-        if (!confirm('Reject this pending donation? It will not be added to the register.')) return;
+        if (!confirm('Reject this pending donation? It will not be added.')) return;
         try {
             await deleteDoc(doc(db, "pendingDonations", id));
             showToast('Rejected');
@@ -969,39 +1051,33 @@
     // --- GLOBAL TRASH FUNCTIONS ---
     window.moveToTrash = async function(colName, id) {
         if (confirm("Move this record to the trash bin?")) {
-            try {
-                await updateDoc(doc(db, colName, id), { status: 'deleted' });
-                showToast('Moved to trash');
-            } catch (err) { showToast('Could not move item — check connection'); }
+            try { await updateDoc(doc(db, colName, id), { status: 'deleted' }); showToast('Moved to trash'); }
+            catch (err) { showToast('Error moving item'); }
         }
     }
     window.restoreItem = async function(colName, id) {
-        try {
-            await updateDoc(doc(db, colName, id), { status: 'active' });
-            showToast('Restored');
-        } catch (err) { showToast('Could not restore item'); }
+        try { await updateDoc(doc(db, colName, id), { status: 'active' }); showToast('Restored'); }
+        catch (err) { showToast('Error restoring'); }
     }
     window.permDelete = async function(colName, id) {
         if (confirm("Permanently delete this record? This cannot be undone.")) {
-            try {
-                await deleteDoc(doc(db, colName, id));
-                showToast('Deleted permanently');
-            } catch (err) { showToast('Could not delete item'); }
+            try { await deleteDoc(doc(db, colName, id)); showToast('Deleted permanently'); }
+            catch (err) { showToast('Error deleting'); }
         }
     }
     window.emptyTrash = async function() {
-        if (confirm("Empty the trash? All deleted items will be gone forever from the cloud.")) {
+        if (confirm("Empty the trash? All deleted items will be gone forever.")) {
             const delFunds = contributions.filter(c => c.status === 'deleted');
             const delExps = expenses.filter(e => e.status === 'deleted');
             try {
                 for (let f of delFunds) await deleteDoc(doc(db, "funds", f.id));
                 for (let e of delExps) await deleteDoc(doc(db, "expenses", e.id));
                 showToast('Trash emptied');
-            } catch (err) { showToast('Could not empty trash fully'); }
+            } catch (err) { showToast('Error emptying trash'); }
         }
     }
 
-    // --- ADD RECORD (with validation) ---
+    // --- MANUAL ADD RECORD (With Transaction for Funds) ---
     window.addRecord = async function(type) {
         const isFund = type === 'fund';
         const dateInput = document.getElementById(isFund ? 'fundDate' : 'expDate').value;
@@ -1012,45 +1088,64 @@
 
         const name = nameInput.value.trim();
         const amount = parseFloat(amountInput.value);
-        const targetCollection = isFund ? "funds" : "expenses";
 
         errorEl.style.display = 'none';
 
-        if (!name) { errorEl.textContent = isFund ? 'Enter the member name.' : 'Enter what was purchased.'; errorEl.style.display = 'block'; nameInput.focus(); return; }
+        if (!name) { errorEl.textContent = 'Enter detail.'; errorEl.style.display = 'block'; return; }
         if (!dateInput) { errorEl.textContent = 'Pick a date.'; errorEl.style.display = 'block'; return; }
-        if (isNaN(amount) || amount <= 0) { errorEl.textContent = 'Enter an amount greater than ₹0.'; errorEl.style.display = 'block'; amountInput.focus(); return; }
-        if (amount > 10000000) { errorEl.textContent = 'That amount looks too large — please check it.'; errorEl.style.display = 'block'; return; }
+        if (isNaN(amount) || amount <= 0) { errorEl.textContent = 'Enter amount > 0.'; errorEl.style.display = 'block'; return; }
 
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Saving…';
+        submitBtn.disabled = true; submitBtn.textContent = 'Saving…';
 
         try {
-            await addDoc(collection(db, targetCollection), {
-                name: name,
-                amount: Math.round(amount * 100) / 100,
-                date: dateInput,
-                status: 'active',
-                timestamp: new Date().getTime()
-            });
-            nameInput.value = '';
-            amountInput.value = '';
-            showToast(isFund ? 'Contribution added' : 'Expense recorded');
+            if (isFund) {
+                const mobile = document.getElementById('memberMobile').value.trim();
+                const counterRef = doc(db, "metadata", "receiptCounter");
+                let newReceiptNo = "";
+                let newDocId = "";
+
+                await runTransaction(db, async (transaction) => {
+                    const counterDoc = await transaction.get(counterRef);
+                    let currentCount = 1;
+                    if (counterDoc.exists()) { currentCount = counterDoc.data().count + 1; }
+                    
+                    transaction.set(counterRef, { count: currentCount }, { merge: true });
+                    const year = new Date().getFullYear();
+                    newReceiptNo = `GK-${year}-${String(currentCount).padStart(4, '0')}`;
+
+                    const fundRef = doc(collection(db, "funds"));
+                    newDocId = fundRef.id;
+                    transaction.set(fundRef, {
+                        name, amount: Math.round(amount * 100) / 100, date: dateInput,
+                        mobile, receiptNo: newReceiptNo, status: 'active', timestamp: new Date().getTime(), source: 'manual'
+                    });
+                });
+                
+                nameInput.value = ''; amountInput.value = ''; document.getElementById('memberMobile').value = '';
+                showToast(`Fund added! Receipt: ${newReceiptNo}`);
+                
+                // Fetch the new doc to generate PDF
+                const docSnap = await getFirestore(app).collection("funds").doc(newDocId).get();
+                if(docSnap.exists) { generateReceiptPDF(newDocId, newReceiptNo, docSnap.data()); }
+
+            } else {
+                await addDoc(collection(db, "expenses"), {
+                    name, amount: Math.round(amount * 100) / 100, date: dateInput, status: 'active', timestamp: new Date().getTime()
+                });
+                nameInput.value = ''; amountInput.value = '';
+                showToast('Expense recorded');
+            }
         } catch (err) {
-            console.error("Cloud Write Error: ", err);
-            errorEl.textContent = 'Could not save — check your connection and try again.';
-            errorEl.style.display = 'block';
+            console.error(err); errorEl.textContent = 'Could not save.'; errorEl.style.display = 'block';
         } finally {
-            submitBtn.disabled = false;
-            submitBtn.textContent = isFund ? 'Add fund' : 'Deduct expense';
+            submitBtn.disabled = false; submitBtn.textContent = isFund ? 'Add & Generate Receipt' : 'Deduct expense';
         }
     }
 
     document.getElementById('addFundBtn').addEventListener('click', () => window.addRecord('fund'));
     document.getElementById('addExpBtn').addEventListener('click', () => window.addRecord('exp'));
 
-    // =====================================================================
-    // DONATION QR UPLOAD + UPI ID (FIXED & FULL ERROR HANDLING)
-    // =====================================================================
+    // ADMIN QR & Settings
     function renderAdminQr() {
         const frame = document.getElementById('adminQrFrame');
         const removeBtn = document.getElementById('removeQrBtn');
@@ -1065,191 +1160,115 @@
     }
 
     document.getElementById('uploadQrBtn').addEventListener('click', () => document.getElementById('qrFileInput').click());
-
     document.getElementById('qrFileInput').addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (!file) return;
-        if (!file.type.startsWith('image/')) { showToast('Please choose an image file'); return; }
-
-        const uploadBtn = document.getElementById('uploadQrBtn');
-        const originalText = uploadBtn.textContent;
-        uploadBtn.disabled = true;
-        uploadBtn.textContent = 'Compressing...';
-
-        const img = new Image();
         const reader = new FileReader();
-        reader.onload = (ev) => {
-            img.onload = async () => {
-                // Highly compressed sizes to keep network traffic minimal
-                const maxDim = 300;
-                let { width, height } = img;
-                if (width > maxDim || height > maxDim) {
-                    const scale = maxDim / Math.max(width, height);
-                    width = Math.round(width * scale);
-                    height = Math.round(height * scale);
-                }
-                const canvas = document.createElement('canvas');
-                canvas.width = width; canvas.height = height;
-                const ctx = canvas.getContext('2d');
-                ctx.fillStyle = '#ffffff';
-                ctx.fillRect(0, 0, width, height);
-                ctx.drawImage(img, 0, 0, width, height);
-                const dataUrl = canvas.toDataURL('image/jpeg', 0.60);
-
-                uploadBtn.textContent = 'Saving...';
-                try {
-                    await setDoc(doc(db, "settings", "donationInfo"), { ...donationSettings, qrImage: dataUrl }, { merge: true });
-                    showToast('QR code uploaded');
-                } catch (err) { 
-                    console.error("Firestore Save Error (QR):", err);
-                    alert("Firestore Write Failure!\nReason: " + err.message + "\n\nDouble-check that database Rules allow access to the 'settings' path.");
-                    showToast('Could not save QR'); 
-                } finally {
-                    uploadBtn.disabled = false;
-                    uploadBtn.textContent = originalText;
-                }
-            };
-            img.src = ev.target.result;
+        reader.onload = async (ev) => {
+            try {
+                await setDoc(doc(db, "settings", "donationInfo"), { ...donationSettings, qrImage: ev.target.result }, { merge: true });
+                showToast('QR code uploaded');
+            } catch (err) { showToast('Could not save QR'); }
         };
         reader.readAsDataURL(file);
-        e.target.value = '';
     });
-
+    
     document.getElementById('removeQrBtn').addEventListener('click', async () => {
-        if (!confirm('Remove the donation QR code?')) return;
-        try {
-            await setDoc(doc(db, "settings", "donationInfo"), { ...donationSettings, qrImage: '' }, { merge: true });
-            showToast('QR code removed');
-        } catch (err) { 
-            console.error("Firestore Save Error (Remove QR):", err);
-            showToast('Could not remove QR'); 
-        }
+        try { await setDoc(doc(db, "settings", "donationInfo"), { ...donationSettings, qrImage: '' }, { merge: true }); showToast('QR removed'); }
+        catch (err) { showToast('Error removing QR'); }
     });
 
     document.getElementById('saveUpiBtn').addEventListener('click', async () => {
         const upiId = document.getElementById('upiIdInput').value.trim();
-        const saveBtn = document.getElementById('saveUpiBtn');
-        
-        saveBtn.disabled = true;
-        saveBtn.textContent = 'Saving...';
-        
-        try {
-            await setDoc(doc(db, "settings", "donationInfo"), { ...donationSettings, upiId }, { merge: true });
-            showToast('Saved');
-        } catch (err) { 
-            console.error("Firestore Save Error (UPI):", err);
-            alert("Firestore Write Failure!\nReason: " + err.message + "\n\nVerify your Firestore Rules configuration permits access.");
-            showToast('Could not save data'); 
-        } finally {
-            saveBtn.disabled = false;
-            saveBtn.textContent = 'Save';
-        }
+        try { await setDoc(doc(db, "settings", "donationInfo"), { ...donationSettings, upiId }, { merge: true }); showToast('Settings Saved'); }
+        catch (err) { showToast('Error saving settings'); }
     });
 
     document.getElementById('copyLinkBtn').addEventListener('click', () => {
-        navigator.clipboard.writeText(donationLinkUrl()).then(() => showToast('Link copied')).catch(() => showToast('Could not copy'));
+        navigator.clipboard.writeText(donationLinkUrl()).then(() => showToast('Link copied'));
     });
-
     document.getElementById('shareWhatsappBtn').addEventListener('click', () => {
-        const text = encodeURIComponent(`🙏 Contribute to Gajkarna Group: ${donationLinkUrl()}`);
-        window.open(`https://wa.me/?text=${text}`, '_blank');
+        window.open(`https://wa.me/?text=${encodeURIComponent(`🙏 Contribute: ${donationLinkUrl()}`)}`, '_blank');
     });
 
     // =====================================================================
-    // RECEIPT GENERATOR (per contribution)
+    // PDF GENERATION (Using uploaded Marathi chanda pauti.png)
     // =====================================================================
-    window.generateReceipt = function(fundId) {
-        const item = contributions.find(c => c.id === fundId);
-        if (!item) { showToast('Record not found'); return; }
+    window.generateReceiptPDF = async function(docId, forcedReceiptNo = null, forcedData = null) {
+        let donation = forcedData || contributions.find(d => d.id === docId);
+        if(!donation) return;
+        
+        document.getElementById('r_receiptNo').innerText = forcedReceiptNo || donation.receiptNo || "N/A";
+        document.getElementById('r_date').innerText = formatDate(donation.date);
+        document.getElementById('r_name').innerText = donation.name;
+        document.getElementById('r_address').innerText = donation.address || '';
+        document.getElementById('r_amount').innerText = donation.amount.toLocaleString('en-IN');
+        document.getElementById('r_words').innerText = numberToWords(donation.amount);
+        
+        let extras = [];
+        if(donation.mobile) extras.push(`Mobile: ${donation.mobile}`);
+        if(donation.txnId) extras.push(`Txn: ${donation.txnId}`);
+        document.getElementById('r_txndetails').innerText = extras.join(' | ');
 
-        const receiptNo = 'GJK-' + fundId.slice(-6).toUpperCase();
-        const container = document.getElementById('receiptContent');
-        container.style.display = 'block';
+        const receiptElem = document.getElementById('receipt-template');
+        
+        try {
+            const canvas = await html2canvas(receiptElem, { scale: 2, useCORS: true, allowTaint: true });
+            const imgData = canvas.toDataURL('image/png');
+            
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF({ orientation: 'portrait', unit: 'px', format: [794, 1123] });
+            pdf.addImage(imgData, 'PNG', 0, 0, 794, 1123);
+            
+            const fileName = `${forcedReceiptNo || donation.receiptNo}_${donation.name.replace(/\s+/g, '_')}.pdf`;
+            pdf.save(fileName);
+        } catch(e) {
+            console.error("PDF generation failed", e);
+            showToast('Error building PDF. Make sure chanda pauti.png exists.');
+        }
+    };
 
-        container.innerHTML = `
-            <div class="receipt-paper" style="border: 2px solid #ad8327;">
-                <div style="text-align:center; border-bottom: 2px double #c2540a; padding-bottom: 14px; margin-bottom: 18px;">
-                    <h1 style="color:#c2540a; font-size:24px; letter-spacing:0.5px;">GAJKARNA GROUP</h1>
-                    <p style="color:#79716a; font-size:12px; margin-top:4px;">Donation Receipt</p>
-                </div>
-                <table style="width:100%; font-size:14px; margin-bottom: 18px;">
-                    <tr><td style="padding:5px 0; color:#79716a;">Receipt No.</td><td style="padding:5px 0; text-align:right; font-weight:bold;">${receiptNo}</td></tr>
-                    <tr><td style="padding:5px 0; color:#79716a;">Date</td><td style="padding:5px 0; text-align:right; font-weight:bold;">${formatDate(item.date)}</td></tr>
-                    <tr><td style="padding:5px 0; color:#79716a;">Received from</td><td style="padding:5px 0; text-align:right; font-weight:bold;">${escapeHtml(item.name)}</td></tr>
-                </table>
-                <div style="background:#f3e3d4; border-radius:8px; padding:16px; text-align:center; margin-bottom:20px;">
-                    <p style="font-size:12px; color:#79716a; margin-bottom:4px;">AMOUNT RECEIVED</p>
-                    <p style="font-size:28px; font-weight:bold; color:#3d7a5c;">₹${item.amount.toLocaleString('en-IN')}</p>
-                </div>
-                <p style="font-size:13px; color:#1c1917; text-align:center; margin-bottom:22px;">With gratitude, Gajkarna Group acknowledges this contribution towards the community fund.</p>
-                <div style="border-top:1px dashed #e3dccf; padding-top:12px; text-align:center;">
-                    <p style="font-size:11px; color:#79716a;">Generated on ${formatDate(localToday)} · Gajkarna Group Fund Register</p>
-                </div>
-            </div>
-        `;
-
-        const opt = { margin: 0.4, filename: `Gajkarna_Receipt_${receiptNo}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'a5', orientation: 'portrait' } };
-        html2pdf().set(opt).from(container).save().then(() => {
-            container.style.display = 'none';
-        });
-    }
-
-    // --- CSV EXPORT ---
-    document.getElementById('csvBtn').addEventListener('click', () => {
+    // --- EXCEL EXPORT (Using SheetJS) ---
+    document.getElementById('excelBtn').addEventListener('click', () => {
         const activeFunds = contributions.filter(c => c.status !== 'deleted');
         const activeExps = expenses.filter(e => e.status !== 'deleted');
+        if (activeFunds.length === 0 && activeExps.length === 0) { showToast('No records to export'); return; }
 
-        if (activeFunds.length === 0 && activeExps.length === 0) {
-            showToast('No records to export yet');
-            return;
-        }
+        const exportData = [];
+        activeFunds.forEach(f => exportData.push({
+            Type: 'Contribution',
+            Receipt_No: f.receiptNo || '',
+            Date: formatDate(f.date),
+            Name: f.name,
+            Mobile: f.mobile || '',
+            Txn_ID: f.txnId || '',
+            Amount: f.amount
+        }));
+        
+        activeExps.forEach(e => exportData.push({
+            Type: 'Expense', Receipt_No: '', Date: formatDate(e.date), Name: e.name, Mobile: '', Txn_ID: '', Amount: -e.amount
+        }));
 
-        const rows = [['Type', 'Date', 'Name / Detail', 'Amount (INR)']];
-        activeFunds.forEach(f => rows.push(['Contribution', f.date, f.name, f.amount]));
-        activeExps.forEach(e => rows.push(['Expense', e.date, e.name, -e.amount]));
-
-        const csvContent = rows.map(r => r.map(cell => {
-            const s = String(cell).replace(/"/g, '""');
-            return /[",\n]/.test(s) ? `"${s}"` : s;
-        }).join(',')).join('\n');
-
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = `Gajkarna_Group_${localToday}.csv`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-        showToast('CSV downloaded');
+        const ws = XLSX.utils.json_to_sheet(exportData);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Register");
+        XLSX.writeFile(wb, `Gajkarna_Report_${localToday}.xlsx`);
+        showToast('Excel downloaded');
     });
 
-    // --- PDF BUILDER ---
+    // --- PDF REPORT (Kept from original codebase but uses new JS) ---
     document.getElementById('pdfBtn').addEventListener('click', () => {
         const incSummary = document.getElementById('pdfSummary').checked;
         const incFunds = document.getElementById('pdfFunds').checked;
         const incExps = document.getElementById('pdfExps').checked;
 
-        if (!incSummary && !incFunds && !incExps) {
-            alert("Please select at least one option (Summary, Contributions, or Expenses) to generate the PDF!");
-            return;
-        }
+        if (!incSummary && !incFunds && !incExps) return alert("Select at least one option.");
 
         const activeFunds = contributions.filter(c => c.status !== 'deleted');
         const activeExps = expenses.filter(e => e.status !== 'deleted');
 
         let tFund = 0; activeFunds.forEach(f => tFund += f.amount);
         let tExp = 0; activeExps.forEach(e => tExp += e.amount);
-
-        if (incFunds && !incExps && activeFunds.length === 0) {
-            alert("There are no active contributions to print!");
-            return;
-        }
-        if (incExps && !incFunds && activeExps.length === 0) {
-            alert("There are no active expenses to print!");
-            return;
-        }
 
         const pdfContainer = document.getElementById('pdfContent');
         pdfContainer.style.display = 'block';
@@ -1258,52 +1277,42 @@
 
         let pdfHTML = `
             <div style="text-align: center; margin-bottom: 30px; border-bottom: 3px double #c2540a; padding-bottom: 16px;">
-                <h1 style="color: #c2540a; margin:0; font-size: 28px; letter-spacing: 0.5px;">GAJKARNA GROUP</h1>
-                <p style="color: #79716a; margin-top:6px; font-size: 13px;">Fund Register Report · Generated ${formatDate(localToday)}</p>
+                <h1 style="color: #c2540a; margin:0; font-size: 28px;">GAJKARNA GROUP</h1>
+                <p style="color: #79716a; margin-top:6px; font-size: 13px;">Fund Register Report · ${formatDate(localToday)}</p>
             </div>
         `;
 
         if (incSummary) {
             pdfHTML += `
-            <div style="display: flex; justify-content: space-between; background: #faf6f0; padding: 16px; border-radius: 4px; margin-bottom: 30px; border: 1px solid #e3dccf;">
-                <div style="text-align:center; flex:1;"><strong style="font-size:12px; color:#79716a;">TOTAL COLLECTED</strong><br><span style="color:#3d7a5c; font-size:20px; font-weight:bold;">₹${tFund.toLocaleString('en-IN')}</span></div>
-                <div style="text-align:center; flex:1;"><strong style="font-size:12px; color:#79716a;">TOTAL EXPENSES</strong><br><span style="color:#b43a33; font-size:20px; font-weight:bold;">₹${tExp.toLocaleString('en-IN')}</span></div>
-                <div style="text-align:center; flex:1;"><strong style="font-size:12px; color:#79716a;">FINAL BALANCE</strong><br><span style="color:#ad8327; font-size:20px; font-weight:bold;">₹${(tFund - tExp).toLocaleString('en-IN')}</span></div>
+            <div style="display: flex; justify-content: space-between; background: #faf6f0; padding: 16px; margin-bottom: 30px; border: 1px solid #e3dccf;">
+                <div style="text-align:center; flex:1;"><strong style="font-size:12px; color:#79716a;">COLLECTED</strong><br><span style="color:#3d7a5c; font-size:20px;">₹${tFund.toLocaleString('en-IN')}</span></div>
+                <div style="text-align:center; flex:1;"><strong style="font-size:12px; color:#79716a;">EXPENSES</strong><br><span style="color:#b43a33; font-size:20px;">₹${tExp.toLocaleString('en-IN')}</span></div>
+                <div style="text-align:center; flex:1;"><strong style="font-size:12px; color:#79716a;">BALANCE</strong><br><span style="color:#ad8327; font-size:20px;">₹${(tFund - tExp).toLocaleString('en-IN')}</span></div>
             </div>`;
         }
 
         if (incFunds && activeFunds.length > 0) {
             pdfHTML += `
             <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px; font-size: 13px;">
-                <thead>
-                    <tr style="background: #3d7a5c; color: white;"><th colspan="3" style="padding: 10px; text-align: left;">Contributions Log</th></tr>
-                    <tr style="background: #e3dccf; color: #1c1917;"><th style="padding: 8px; text-align: left; border: 1px solid #ccc;">Date</th><th style="padding: 8px; text-align: left; border: 1px solid #ccc;">Member Name</th><th style="padding: 8px; text-align: right; border: 1px solid #ccc;">Amount</th></tr>
-                </thead>
-                <tbody>
-                    ${activeFunds.map(c => `<tr><td style="padding: 8px; border: 1px solid #ccc;">${formatDate(c.date)}</td><td style="padding: 8px; border: 1px solid #ccc;">${escapeHtml(c.name)}</td><td style="padding: 8px; text-align: right; border: 1px solid #ccc;">₹${c.amount.toLocaleString('en-IN')}</td></tr>`).join('')}
-                </tbody>
+                <tr style="background: #3d7a5c; color: white;"><th colspan="4" style="padding: 10px;">Contributions Log</th></tr>
+                <tr style="background: #e3dccf;"><th style="padding: 8px;">Receipt</th><th style="padding: 8px;">Date</th><th style="padding: 8px;">Name</th><th style="padding: 8px; text-align:right;">Amount</th></tr>
+                ${activeFunds.map(c => `<tr><td style="padding: 8px; border: 1px solid #ccc;">${c.receiptNo||''}</td><td style="padding: 8px; border: 1px solid #ccc;">${formatDate(c.date)}</td><td style="padding: 8px; border: 1px solid #ccc;">${escapeHtml(c.name)}</td><td style="padding: 8px; text-align: right; border: 1px solid #ccc;">₹${c.amount.toLocaleString('en-IN')}</td></tr>`).join('')}
             </table>`;
         }
 
         if (incExps && activeExps.length > 0) {
             pdfHTML += `
             <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
-                <thead>
-                    <tr style="background: #b43a33; color: white;"><th colspan="3" style="padding: 10px; text-align: left;">Expenses Log</th></tr>
-                    <tr style="background: #e3dccf; color: #1c1917;"><th style="padding: 8px; text-align: left; border: 1px solid #ccc;">Date</th><th style="padding: 8px; text-align: left; border: 1px solid #ccc;">Expense Detail</th><th style="padding: 8px; text-align: right; border: 1px solid #ccc;">Amount</th></tr>
-                </thead>
-                <tbody>
-                    ${activeExps.map(e => `<tr><td style="padding: 8px; border: 1px solid #ccc;">${formatDate(e.date)}</td><td style="padding: 8px; border: 1px solid #ccc;">${escapeHtml(e.name)}</td><td style="padding: 8px; text-align: right; border: 1px solid #ccc;">₹${e.amount.toLocaleString('en-IN')}</td></tr>`).join('')}
-                </tbody>
+                <tr style="background: #b43a33; color: white;"><th colspan="3" style="padding: 10px;">Expenses Log</th></tr>
+                <tr style="background: #e3dccf;"><th style="padding: 8px;">Date</th><th style="padding: 8px;">Detail</th><th style="padding: 8px; text-align:right;">Amount</th></tr>
+                ${activeExps.map(e => `<tr><td style="padding: 8px; border: 1px solid #ccc;">${formatDate(e.date)}</td><td style="padding: 8px; border: 1px solid #ccc;">${escapeHtml(e.name)}</td><td style="padding: 8px; text-align: right; border: 1px solid #ccc;">₹${e.amount.toLocaleString('en-IN')}</td></tr>`).join('')}
             </table>`;
         }
 
         pdfContainer.innerHTML = pdfHTML;
-        const opt = { margin: 0.5, filename: 'Gajkarna_Group_Report.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' } };
+        const opt = { margin: 0.5, filename: 'Gajkarna_Report.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' } };
 
-        html2pdf().set(opt).from(pdfContainer).save().then(() => {
-            pdfContainer.style.display = 'none';
-        });
+        html2pdf().set(opt).from(pdfContainer).save().then(() => { pdfContainer.style.display = 'none'; });
     });
 </script>
 
